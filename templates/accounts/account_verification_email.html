@@ -1,0 +1,10 @@
+{% autoescape off %}
+
+Hola {{user.first_name}},
+
+Hazme click :
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
+Gracias por entregarme tus datos :D
+
+{% endautoescape %}
