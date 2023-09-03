@@ -90,6 +90,8 @@ AUTH_USER_MODEL='accounts.Account'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Database Configuration
+import os
 if 'RDS_DB_NAME' in os.environ:
     DATABASES = {
         'default': {
@@ -108,7 +110,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 
 # Password validation
