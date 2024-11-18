@@ -1,136 +1,143 @@
 {% load static %}
 
-<header class="section-header">
-    <nav class="navbar p-md-0 navbar-expand-sm navbar-light border-bottom">
-      <div class="container">
+<header class="border-b">
+  <nav class="p-0 md:p-0 bg-white border-b">
+    <div class="container mx-auto flex items-center justify-between">
+      <!-- Botón de Menú para Pantallas Pequeñas -->
+      <div x-data="{ open: false }" class="block md:hidden">
         <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarTop4"
-          aria-controls="navbarNav"
-          aria-expanded="false"
+          @click="open = !open"
+          class="navbar-toggler px-3 py-2 rounded border border-gray-300 text-gray-600"
           aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+          <i class="fa fa-bars"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarTop4">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
-              <a href="#" class="nav-link"> Espanol </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a href="#" class="nav-link"> USD </a>
-            </li>
+        
+        <!-- Menú Desplegable para Móviles -->
+        <div x-show="open" class="absolute top-full left-0 w-full bg-white shadow-md mt-2 p-4">
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 hover:text-gray-800">Espanol</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-800">USD</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-envelope"></i> Email</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-phone"></i> Llamanos</a></li>
           </ul>
-          <ul class="navbar-nav">
-            <li>
-              <a href="#" class="nav-link">
-                <i class="fa fa-envelope"></i> Email
-              </a>
-            </li>
-            <li>
-              <a href="#" class="nav-link">
-                <i class="fa fa-phone"></i> Llamanos</a
-              >
-            </li>
-          </ul>
-          <!-- list-inline //  -->
         </div>
-        <!-- navbar-collapse .// -->
       </div>
-      <!-- container //  -->
-    </nav>
+      
+      <!-- Menú de Navegación para Pantallas Grandes -->
+      <div class="hidden md:flex w-full items-center justify-between">
+        <ul class="flex space-x-4">
+          <li><a href="#" class="text-gray-600 hover:text-gray-800">Espanol</a></li>
+          <li><a href="#" class="text-gray-600 hover:text-gray-800">USD</a></li>
+        </ul>
+        <ul class="flex space-x-4">
+          <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-envelope"></i> Email</a></li>
+          <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-phone"></i> Llamanos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <section class="header-main border-bottom">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-2 col-md-3 col-6">
-            <a href="./" class="brand-wrap">
-              <img class="logo" src="{% static './images/logoTienda.png' %}" />
-            </a>
-            <!-- brand-wrap.// -->
-          </div>
-          <div class="col-lg col-sm col-md col-6 flex-grow-0">
-            <div class="category-wrap dropdown d-inline-block float-right">
-              <button
-                type="button"
-                class="btn btn-primary dropdown-toggle"
-                data-toggle="dropdown"
-              >
-                <i class="fa fa-bars"></i> Categorias
-              </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="{%url 'store'%}">Todos</a>
-                {% for category in links %}
-                <a class="dropdown-item" href="{{category.get_url}}">{{category.category_name}}</a>
-                {% endfor %}
-              </div>
-            </div>
-            <!-- category-wrap.// -->
-          </div>
-          <!-- col.// -->
-          <a href="{% url 'store' %}" class="btn btn-outline-primary">Tienda</a>
-          <div class="col-lg col-md-6 col-sm-12 col">
-
-            <form action="{% url 'search' %}" class="search">
-              <div class="input-group w-100">
-                <input
-                  type="text"
-                  class="form-control"
-                  style="width: 60%"
-                  placeholder="Buscar Productos"
-                  name="keyword"
-                />
-
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="submit">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-            <!-- search-wrap .end// -->
-          </div>
-          <!-- col.// -->
-          <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
-            <div class="d-flex justify-content-end mb-3 mb-lg-0">
-
-              {% if user.id is None %}
-              <div class="widget-header">
-                <small class="title text-muted">Bienvenido visitante!</small>
-                <div>
-                  <a href="{% url 'login' %}">Login</a>
-                  <span class="dark-transp"> | </span>
-                  <a href="{% url 'register' %}"> Registrar</a>
-                </div>
-              </div>
-              {% else %}
-              <div class="widget-header">
-                <small class="title text-muted">Bienvenido {{user.first_name}}</small>
-                <div>
-                  <a href="{% url 'dashboard' %}">Dashboard</a>
-                  <span class="dark-transp"> | </span>
-                  <a href="{% url 'logout' %}"> Cerrar Sesión</a>
-                </div>
-              </div>
-              {% endif %}
-
-              <a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
-                <div class="icon icon-sm rounded-circle border">
-                  <i class="fa fa-shopping-cart"></i>
-                </div>
-                <span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
-              </a>
-            </div>
-            <!-- widgets-wrap.// -->
-          </div>
-          <!-- col.// -->
+  <section class="border-b py-4">
+    <div class="container mx-auto">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <div class="w-1/4 lg:w-1/6">
+          <a href="./" class="block">
+            <img class="h-12 w-auto" src="{% static 'images/logoTienda.png' %}" alt="Logo"/>
+          </a>
         </div>
-        <!-- row.// -->
+
+        <!-- Categorías Desplegable -->
+        <div x-data="{ open: false }" class="hidden md:flex items-center space-x-4">
+          <div class="relative">
+            <button @click="open = !open" class="btn-primary flex items-center">
+              <i class="fa fa-bars mr-2"></i> Categorias
+            </button>
+            <div
+              x-show="open"
+              @click.away="open = false"
+              class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
+            >
+              <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'store' %}">Todos</a>
+              {% for category in links %}
+              <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{{ category.get_url }}">{{ category.category_name }}</a>
+              {% endfor %}
+            </div>
+          </div>
+          <a href="{% url 'store' %}" class="ml-4 btn-outline-primary">Tienda</a>
+        </div>
+
+        <!-- Barra de Búsqueda -->
+        <div class="flex-grow mx-4">
+          <form action="{% url 'search' %}" class="flex">
+            <input
+              type="text"
+              class="w-full md:w-3/4 px-4 py-2 border border-gray-300 rounded-l focus:outline-none focus:ring focus:border-blue-300"
+              placeholder="Buscar Productos"
+              name="keyword"
+            />
+            <button class="btn-primary px-4 py-2 rounded-r" type="submit">
+              <i class="fa fa-search"></i>
+            </button>
+          </form>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          {% if user.id is None %}
+          <div class="text-center">
+            <p class="text-gray-600 text-sm">Bienvenido visitante!</p>
+            <div class="flex space-x-2">
+              <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
+              <span>|</span>
+              <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Registrar</a>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center">
+            <p class="text-gray-600 text-sm">Bienvenido {{user.first_name}}</p>
+            <div class="flex space-x-2">
+              <a href="{% url 'dashboard' %}" class="text-blue-600 hover:underline">Dashboard</a>
+              <span>|</span>
+              <a href="{% url 'logout' %}" class="text-blue-600 hover:underline">Cerrar Sesión</a>
+            </div>
+          </div>
+          {% endif %}
+
+        
+        </div>
+
+        <!-- Desplegable del Carrito de Compras -->
+        <div x-data="{ open: false }" class="relative">
+          <a href="#" @click="open = !open" class="flex items-center">
+            <div class="icon w-8 h-8 flex items-center justify-center border rounded-full">
+              <i class="fa fa-shopping-cart"></i>
+            </div>
+            <span class="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs px-2">{{ cart_count }}</span>
+          </a>
+          
+          <!-- Carrito Desplegable -->
+          <div
+            x-show="open"
+            @click.away="open = false"
+            class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-4"
+          >
+            <h3 class="font-semibold text-lg mb-2">Carrito de Compras</h3>
+            {% for item in cart_items %}
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <p class="text-sm font-medium">{{ item.product.product_name }}</p>
+                <p class="text-xs text-gray-500">Cantidad: {{ item.quantity }}</p>
+              </div>
+              <span class="text-sm font-semibold">$ {{ item.sub_total }}</span>
+            </div>
+            {% endfor %}
+            <div class="border-t pt-2 mt-2 text-right">
+              <a href="{% url 'cart' %}" class="text-blue-600 hover:underline">Ver Carrito Completo</a>
+            </div>
+          </div>
+        </div>
       </div>
-      <!-- container.// -->
-    </section>
-    <!-- header-main .// -->
-  </header>
-  <!-- section-header.// -->
+    </div>
+  </section>
+</header>

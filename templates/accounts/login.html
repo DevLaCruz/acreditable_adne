@@ -3,48 +3,47 @@
 {% block content %}
 
 <!-- ========================= SECTION CONTENT ========================= -->
-<section class="section-conten padding-y" style="min-height:84vh">
+<section class="py-8" style="min-height:84vh">
 
   {% if request.GET.command == 'verification' %}
-    <div class="container mx-auto alert alert-info" role="alert" style="max-width=380px; margin-top=100px">
-      Muchas por Registrarte en nuestro portal, te hemos enviado un email para confirmar tu cuenta [{{request.GET.email}}]
+    <div class="container mx-auto bg-blue-100 text-blue-800 border border-blue-300 rounded p-4 max-w-sm mt-24">
+      Muchas gracias por registrarte en nuestro portal. Te hemos enviado un email para confirmar tu cuenta [{{ request.GET.email }}]
       <br><br>
-      Si ya verificaste tu cuenta puedes ir al Login <a href="{% url 'login' %}">Login</a>
+      Si ya verificaste tu cuenta puedes ir al <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
     </div>
   {% else %}
 
     <!-- ============================ COMPONENT LOGIN   ================================= -->
-        <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
-          {% include 'includes/alerts.html' %}
-          <div class="card-body">
-          <h4 class="card-title mb-4">Login</h4>
-          <form action="{% url 'login' %}" method="POST">
-            {% csrf_token %}
-              <div class="form-group">
-                 <input type="email" class="form-control" placeholder="Email" name="email">
-              </div> <!-- form-group// -->
-              <div class="form-group">
-                <input type="password" class="form-control" placeholder="Password" name="password">
-              </div> <!-- form-group// -->
-              
-              <div class="form-group">
-                  <a href="{% url 'forgotPassword' %}" class="float-right">Olvidaste tu password?</a> 
-               
-              </div> <!-- form-group form-check .// -->
-              <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block"> Login  </button>
-              </div> <!-- form-group// -->    
-          </form>
-          </div> <!-- card-body.// -->
-        </div> <!-- card .// -->
-    
-         <p class="text-center mt-4">No tienes una cuenta? <a href="{% url 'register' %}">Registrate</a></p>
-         <br><br>
+    <div class="bg-white shadow-md rounded-lg max-w-sm mx-auto mt-24 p-6">
+      {% include 'includes/alerts.html' %}
+      <div class="mb-4">
+        <h4 class="text-2xl font-semibold">Login</h4>
+      </div>
+      <form action="{% url 'login' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-4">
+          <input type="email" name="email" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+        </div>
+        <div class="mb-4">
+          <input type="password" name="password" placeholder="Password" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+        </div>
+        
+        <div class="flex justify-between items-center mb-4">
+          <a href="{% url 'forgotPassword' %}" class="text-blue-600 hover:underline">Olvidaste tu password?</a>
+        </div>
+        
+        <div>
+          <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Login</button>
+        </div>
+      </form>
+    </div>
+
+    <p class="text-center mt-4">No tienes una cuenta? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Regístrate</a></p>
+    <br><br>
     <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
-    {% endif %}
-    
-    </section>
-    <!-- ========================= SECTION CONTENT END// ========================= -->
+  {% endif %}
+
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock content %}
-

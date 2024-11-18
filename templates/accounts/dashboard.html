@@ -3,53 +3,47 @@
 {% block content %}
 
 <!-- ========================= SECTION CONTENT ========================= -->
-<section class="section-conten padding-y bg">
+<section class="py-10 bg-gray-100">
 
     {% include 'includes/alerts.html' %}
 
-    <div class="container">
-        <div class="row">
-        {% include 'includes/dashboard_sidebar.html' %}
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap">
+            {% include 'includes/dashboard_sidebar.html' %}
             
-        <main class="col-md-9">
-            <article class="card">
-            <header class="card-header">
-                <strong class="d-inline-block mr-3">Sesión iniciada de: </strong>
-                <span>{{user.full_name}}</span>
-            </header>
-            <div class="card-body">
-                <div class="row"> 
-                   
-                    <div class="col-md-6">
-                        <div class="card" style="text-align:center;">
-                            <div class="card-body">
-                              <h5 class="card-title">Total de Ordenes</h5>
-                              <h4>{{ orders_count }}</h4>
-                              <a href="">Ver Ordenes</a>
+            <main class="w-full md:w-3/4">
+                <article class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <header class="bg-gray-200 px-6 py-4">
+                        <strong class="inline-block mr-3">Sesión iniciada de: </strong>
+                        <span>{{ user.full_name }}</span>
+                    </header>
+                    <div class="p-6">
+                        <div class="flex flex-wrap -mx-4"> 
+                           
+                            <div class="w-full md:w-1/2 px-4 mb-6">
+                                <div class="bg-white shadow-lg rounded-lg text-center p-6">
+                                    <h5 class="text-lg font-semibold mb-2">Total de Ordenes</h5>
+                                    <h4 class="text-2xl font-bold">{{ orders_count }}</h4>
+                                    <a href="" class="text-blue-500 hover:text-blue-700 mt-2 inline-block">Ver Ordenes</a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="card" style="text-align:center;">
-                            <div class="card-body">
-                                <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" width="50" height="50" style="border-radius:50%">
-                                <p class="mb-0">{{user.email}}</p>
-                                <p>{{user.phone_number}}</p>
+                            <div class="w-full md:w-1/2 px-4 mb-6">
+                                <div class="bg-white shadow-lg rounded-lg text-center p-6">
+                                    <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-12 h-12 rounded-full mx-auto mb-2">
+                                    <p class="mb-0">{{ user.email }}</p>
+                                    <p>{{ user.phone_number }}</p>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                </div> <!-- row.// -->
-            </div> <!-- card-body .// -->
-           
-            </article> <!-- order-group.// --> 
-        </main>
-    </div> <!-- row.// -->
-    </div>
+                        </div> <!-- row -->
+                    </div> <!-- card-body -->
+                </article> <!-- card -->
+            </main>
+        </div> <!-- row -->
+    </div> <!-- container -->
     
-    
-    </section>
-    <!-- ========================= SECTION CONTENT END// ========================= -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
 
-{%endblock%}
+{% endblock %}

@@ -105,7 +105,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': BASE_DIR / 'suarez_db.sqlite3',
         }
     }
 
@@ -157,6 +157,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
+EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')

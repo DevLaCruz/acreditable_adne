@@ -1,65 +1,57 @@
 {% extends 'base.html' %}
 {% load static %}
-{%block content%}
+{% block content %}
 
 <!-- ========================= SECTION MAIN ========================= -->
-<section class="section-intro padding-y-sm">
-<div class="container">
+<section class="py-4">
+  <div class="container mx-auto">
 
-<div class="intro-banner-wrap">
-	<img src="{% static 'images/banners/banner01.jpg' %}" class="img-fluid rounded">
-</div>
+    <div class="rounded overflow-hidden">
+      <img src="{% static 'images/banners/banner01.jpg' %}" class="w-full rounded">
+    </div>
 
-</div> <!-- container //  -->
+  </div> <!-- container //  -->
 </section>
 <!-- ========================= SECTION MAIN END// ========================= -->
 
 <!-- ========================= SECTION  ========================= -->
-<section class="section-name padding-y-sm">
-<div class="container">
+<section class="py-4">
+  <div class="container mx-auto">
 
-<header class="section-heading">
-	<a href="./store.html" class="btn btn-outline-primary float-right">Ver Todo</a>
-	<h3 class="section-title">Productos populares</h3>
-</header><!-- sect-heading -->
+    <header class="flex justify-between items-center mb-4">
+      <a href="./store.html" class="btn border border-primary text-primary hover:bg-primary hover:text-white transition-colors">Ver Todo</a>
+      <h3 class="text-xl font-semibold">Productos populares</h3>
+    </header>
 
-	
-<div class="row">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      
+      {% for product in products %}
+      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <a href="{{product.get_url}}" class="block overflow-hidden">
+          <img src="{{product.images.url}}" class="w-full h-48 object-cover">
+        </a>
+        <figcaption class="p-4">
+          <a href="{{product.get_url}}" class="block text-lg font-semibold mb-2 hover:text-primary">{{product.product_name}}</a>
+          <div class="text-gray-500 mb-2">{{product.price}}</div>
 
-	{%for product in products%}
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="{{product.get_url}}" class="img-wrap"> <img src="{{product.images.url}}"> </a>
-			<figcaption class="info-wrap">
-				<a href="{{product.get_url}}" class="title">{{product.product_name}}</a>
-				<div class="price mt-1">{{product.price}}</div> <!-- price-wrap.// -->
+          <div class="flex space-x-1 text-yellow-500">
+            <span>
+              <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+            </span>
+          </div>
 
-				<div class="rating-star">
-					<span>
-						  <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-						  <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-						  <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-						  <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-						  <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-					</span>
-				</div>
+        </figcaption>
+      </div>
+      {% endfor %}
 
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	{% endfor %}
-</div> <!-- row.// -->
+    </div> <!-- grid.// -->
 
-</div><!-- container // -->
+  </div><!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
 
-
-
-
-
-
-</body>
-</html>
-
-{%endblock%}
+{% endblock %}

@@ -1,130 +1,113 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
-
 {% block content %}
 
-<section class="section-content padding-y bg">
-    <div class="container">
+<section class="py-8 bg-gray-100">
+  <div class="container mx-auto">
 
     <!-- ============================ COMPONENT 1 ================================= -->
-    {% if not cart_items%}
-        <h2 class="text-center">El carrito de compras esta vacio</h2>
-        <br>
-        <div class="text-center">
-            <a href="{% url 'store' %}" class="btn btn-primary">Continua comprando</a>
-        </div>
+    {% if not cart_items %}
+      <h2 class="text-center text-2xl font-semibold">El carrito de compras está vacío</h2>
+      <br>
+      <div class="text-center">
+        <a href="{% url 'store' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Continua comprando</a>
+      </div>
     {% else %}
-    <div class="row">
-        <aside class="col-lg-9">
-    <div class="card">
-    <table class="table table-borderless table-shopping-cart">
-    <thead class="text-muted">
-    <tr class="small text-uppercase">
-      <th scope="col">Product</th>
-      <th scope="col" width="120">Cantidad</th>
-      <th scope="col" width="120">Precio</th>
-      <th scope="col" class="text-right" width="200"> </th>
-    </tr>
-    </thead>
-    <tbody>
+    <div class="flex flex-wrap -mx-4">
+      <aside class="w-full lg:w-3/4 px-4 mb-4 lg:mb-0">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+          <table class="w-full table-auto">
+            <thead class="bg-gray-100 text-gray-600 text-sm uppercase font-semibold">
+              <tr>
+                <th class="p-4 text-left">Producto</th>
+                <th class="p-4 text-left" width="120">Cantidad</th>
+                <th class="p-4 text-left" width="120">Precio</th>
+                <th class="p-4 text-right" width="200"></th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700">
 
-    {% for cart_item in cart_items %}
-    <tr>
-        <td>
-            <figure class="itemside align-items-center">
-                <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
-                <figcaption class="info">
-                    <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-
-                    <p class="text-muted small">
+              {% for cart_item in cart_items %}
+              <tr class="border-b">
+                <td class="p-4">
+                  <div class="flex items-center">
+                    <div class="w-16 h-16 overflow-hidden">
+                      <img src="{{ cart_item.product.images.url }}" class="w-full h-full object-cover rounded">
+                    </div>
+                    <div class="ml-4">
+                      <a href="{{ cart_item.product.get_url }}" class="text-lg font-semibold text-gray-800 hover:underline">{{ cart_item.product.product_name }}</a>
+                      <p class="text-sm text-gray-500">
                         {% if cart_item.variations.all %}
-                            {% for item in cart_item.variations.all %}
-                                {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-                            {% endfor %}
+                          {% for item in cart_item.variations.all %}
+                            {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
+                          {% endfor %}
                         {% endif %}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center">
+                    <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded-l">
+                      <i class="fa fa-minus"></i>
+                    </a>
+                    <input type="text" class="w-12 text-center border-t border-b border-gray-200" value="{{ cart_item.quantity }}">
+                    <form action="{% url 'add_cart' cart_item.product.id %}" method="post" class="inline">
+                      {% csrf_token %}
+                      {% for item in cart_item.variations.all %}
+                        <input type="hidden" name="{{ item.variation_category | lower }}" value="{{ item.variation_value | capfirst }}">
+                      {% endfor %}
+                      <button class="bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded-r">
+                        <i class="fa fa-plus"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <div>
+                    <span class="text-lg font-semibold text-gray-800">$ {{ cart_item.sub_total }}</span>
+                    <p class="text-sm text-gray-500"> $ {{ cart_item.product.price }} cada uno </p>
+                  </div>
+                </td>
+                <td class="p-4 text-right">
+                  <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" class="text-red-500 hover:text-red-600">Eliminar</a>
+                </td>
+              </tr>
+              {% endfor %}
 
-                    </p>
-
-                </figcaption>
-            </figure>
-        </td>
-        <td>
-            <!-- col.// -->
-                        <div class="col">
-                            <div class="input-group input-spinner">
-                                <div class="input-group-prepend">
-                                <a href="{% url 'remove_cart' cart_item.product.id cart_item.id  %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i> </a>
-                                </div>
-                                <input type="text" class="form-control"  value="{{ cart_item.quantity }}">
-                                <div class="input-group-append">
-
-                                  <form action="{% url 'add_cart' cart_item.product.id  %}" method="post">
-                                    {% csrf_token %}
-                                    {% for item in cart_item.variations.all %}
-                                        <input type="hidden" name="{{ item.variation_category | lower }}" value="{{ item.variation_value | capfirst }}">
-                                    {% endfor %}
-                                    <button class="btn btn-light" type="submit" id="button-minus"> <i class="fa fa-plus"></i> </button>
-
-                                  </form>
-
-                                </div>
-                            </div> <!-- input-group.// -->
-                        </div> <!-- col.// -->
-        </td>
-        <td>
-            <div class="price-wrap">
-                <var class="price">$  {{ cart_item.sub_total }}  </var>
-                <small class="text-muted"> $ {{cart_item.product.price}}    cada uno </small>
-            </div> <!-- price-wrap .// -->
-        </td>
-        <td class="text-right">
-        <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id  %}" class="btn btn-danger"> Eliminar</a>
-        </td>
-    </tr>
-    {% endfor %}
-
-
-
-    </tbody>
-    </table>
-    </div> <!-- card.// -->
-
-        </aside> <!-- col.// -->
-        <aside class="col-lg-3">
-
-            <div class="card">
-            <div class="card-body">
-                <dl class="dlist-align">
-                  <dt>Precio Total:</dt>
-                  <dd class="text-right">$ {{ total }}</dd>
-                </dl>
-                <dl class="dlist-align">
-                  <dt>Impuesto:</dt>
-                  <dd class="text-right"> $ {{ tax }}</dd>
-                </dl>
-                <dl class="dlist-align">
-                  <dt>Total:</dt>
-                  <dd class="text-right text-dark b"><strong>$ {{grand_total}}</strong></dd>
-                </dl>
-                <hr>
-                <p class="text-center mb-3">
-                    <img src="{% static './images/misc/payments.png' %}" height="26">
-                </p>
-                <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Pagar </a>
-                <a href="{% url 'store' %}" class="btn btn-light btn-block">Continua comprando</a>
-            </div> <!-- card-body.// -->
-            </div> <!-- card.// -->
-
-    </aside> <!-- col.// -->
-
-
-    </div> <!-- row.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
+            </tbody>
+          </table>
+        </div>
+      </aside>
+      <aside class="w-full lg:w-1/4 px-4">
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <div class="mb-4">
+            <div class="flex justify-between text-gray-600">
+              <span>Precio Total:</span>
+              <span>$ {{ total }}</span>
+            </div>
+            <div class="flex justify-between text-gray-600">
+              <span>Impuesto:</span>
+              <span>$ {{ tax }}</span>
+            </div>
+            <div class="flex justify-between font-bold text-gray-800">
+              <span>Total:</span>
+              <span>$ {{ grand_total }}</span>
+            </div>
+          </div>
+          <hr class="my-4">
+          <p class="text-center mb-4">
+            <img src="{% static './images/misc/payments.png' %}" class="h-6 inline">
+          </p>
+          <a href="{% url 'checkout' %}" class="block bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600">Pagar</a>
+          <a href="{% url 'store' %}" class="block bg-gray-100 text-gray-600 text-center py-2 rounded hover:bg-gray-200 mt-2">Continua comprando</a>
+        </div>
+      </aside>
+    </div>
     {% endif %}
-    </div> <!-- container .//  -->
+  </div>
 </section>
-    <!-- ========================= SECTION CONTENT END// ========================= -->
+<!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock %}

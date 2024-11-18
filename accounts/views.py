@@ -16,6 +16,8 @@ from carts.models import Cart, CartItem
 import requests
 
 # Create your views here.
+
+
 def register(request):
     form = RegistrationForm()
     if request.method == 'POST':
@@ -28,17 +30,15 @@ def register(request):
             password = form.cleaned_data['password']
             # vaxidrez@gmail.com
             username = email.split("@")[0]
-            user = Account.objects.create_user(first_name=first_name, last_name=last_name, email=email, username=username, password=password )
+            user = Account.objects.create_user(
+                first_name=first_name, last_name=last_name, email=email, username=username, password=password)
             user.phone_number = phone_number
             user.save()
-
 
             profile = UserProfile()
             profile.user_id = user.id
             profile.profile_picture = 'default/default-user.png'
             profile.save()
-
-
 
             current_site = get_current_site(request)
             mail_subject = 'Por favor activa tu cuenta en Vaxi Drez'
@@ -52,17 +52,16 @@ def register(request):
             send_email = EmailMessage(mail_subject, body, to=[to_email])
             send_email.send()
 
-
-            #messages.success(request, 'Se registro el usuario exitosamente')
+            # messages.success(request, 'Se registro el usuario exitosamente')
 
             return redirect('/accounts/login/?command=verification&email='+email)
-
 
     context = {
         'form': form
     }
 
     return render(request, 'accounts/register.html', context)
+
 
 def login(request):
     if request.method == 'POST':
@@ -75,7 +74,8 @@ def login(request):
 
             try:
                 cart = Cart.objects.get(cart_id=_cart_id(request))
-                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                is_cart_item_exists = CartItem.objects.filter(
+                    cart=cart).exists()
                 if is_cart_item_exists:
                     cart_item = CartItem.objects.filter(cart=cart)
 
@@ -88,7 +88,7 @@ def login(request):
                     ex_var_list = []
                     id = []
                     for item in cart_item:
-                        existing_variation= item.variations.all()
+                        existing_variation = item.variations.all()
                         ex_var_list.append(list(existing_variation))
                         id.append(item.id)
 
@@ -96,27 +96,26 @@ def login(request):
                     #  ex_var_list = [5, 6, 7, 8]
 
                     for pr in product_variation:
-                            if pr in ex_var_list:
-                                index = ex_var_list.index(pr)
-                                item_id = id[index]
-                                item = CartItem.objects.get(id=item_id)
-                                item.quantity +=1
+                        if pr in ex_var_list:
+                            index = ex_var_list.index(pr)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id=item_id)
+                            item.quantity += 1
+                            item.user = user
+                            item.save()
+                        else:
+                            cart_item = CartItem.objects.filter(cart=cart)
+                            for item in cart_item:
                                 item.user = user
                                 item.save()
-                            else:
-                                cart_item = CartItem.objects.filter(cart=cart)
-                                for item in cart_item:
-                                    item.user = user
-                                    item.save()
             except:
                 pass
-
 
             # http://127.0.0.1:8000/accounts/login/?next=/cart/checkout/
             auth.login(request, user)
             messages.success(request, 'Has iniciado sesion exitosamente')
 
-            url  = request.META.get('HTTP_REFERER')
+            url = request.META.get('HTTP_REFERER')
             try:
                 query = requests.utils.urlparse(url).query
                 # next=/cart/checkout/
@@ -130,8 +129,8 @@ def login(request):
             messages.error(request, 'Las credenciales son incorrectas')
             return redirect('login')
 
-
     return render(request, 'accounts/login.html')
+
 
 @login_required(login_url='login')
 def logout(request):
@@ -145,7 +144,7 @@ def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Account._default_manager.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
@@ -157,9 +156,11 @@ def activate(request, uidb64, token):
         messages.error(request, 'La activacion es invalida')
         return redirect('register')
 
+
 @login_required(login_url='login')
 def dashboard(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders = Order.objects.order_by(
+        '-created_at').filter(user_id=request.user.id, is_ordered=True)
     orders_count = orders.count()
 
     userprofile = UserProfile.objects.get(user_id=request.user.id)
@@ -180,17 +181,18 @@ def forgotPassword(request):
 
             current_site = get_current_site(request)
             mail_subject = 'Resetear Password'
-            body = render_to_string('accounts/reset_password_email.html',{
+            body = render_to_string('accounts/reset_password_email.html', {
                 'user': user,
                 'domain': current_site,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': default_token_generator.make_token(user),
             })
             to_email = email
-            send_email = EmailMessage(mail_subject, body , to=[to_email])
+            send_email = EmailMessage(mail_subject, body, to=[to_email])
             send_email.send()
 
-            messages.success(request, 'Un email fue enviado a tu bandeja de entrada para resetear tu password')
+            messages.success(
+                request, 'Un email fue enviado a tu bandeja de entrada para resetear tu password')
             return redirect('login')
         else:
             messages.error(request, 'La cuenta de usuario no existe')
@@ -200,19 +202,20 @@ def forgotPassword(request):
 
 
 def resetpassword_validate(request, uidb64, token):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = Account._default_manager.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
-            user=None
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
 
-        if user is not None and default_token_generator.check_token(user, token):
-            request.session['uid'] = uid
-            messages.success(request, 'Por favor resetea tu password')
-            return redirect('resetPassword')
-        else:
-            messages.error(request, 'El link ha expirado')
-            return redirect('login')
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.success(request, 'Por favor resetea tu password')
+        return redirect('resetPassword')
+    else:
+        messages.error(request, 'El link ha expirado')
+        return redirect('login')
+
 
 def resetPassword(request):
     if request.method == 'POST':
@@ -234,18 +237,21 @@ def resetPassword(request):
 
 
 def my_orders(request):
-    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    orders = Order.objects.filter(
+        user=request.user, is_ordered=True).order_by('-created_at')
     context = {
         'orders': orders,
     }
     return render(request, 'accounts/my_orders.html', context)
+
 
 @login_required(login_url='login')
 def edit_profile(request):
     userprofile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        profile_form = UserProfileForm(
+            request.POST, request.FILES, instance=userprofile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -279,13 +285,15 @@ def change_password(request):
                 user.set_password(new_password)
                 user.save()
 
-                messages.success(request, 'El Password se actualizo exitosamente')
+                messages.success(
+                    request, 'El Password se actualizo exitosamente')
                 return redirect('change_password')
             else:
                 messages.error(request, 'Por favor ingrese un password valido')
                 return redirect('change_password')
         else:
-            messages.error(request, 'El password no coincide con la confirmacion de password')
+            messages.error(
+                request, 'El password no coincide con la confirmacion de password')
             return redirect('change_password')
 
     return render(request, 'accounts/change_password.html')

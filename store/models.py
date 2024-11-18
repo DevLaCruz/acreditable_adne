@@ -5,6 +5,8 @@ from accounts.models import Account
 from django.db.models import Avg, Count
 
 # Create your models here.
+
+
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
     slug = models.CharField(max_length=200, unique=True)
@@ -24,45 +26,46 @@ class Product(models.Model):
         return self.product_name
 
     def averageReview(self):
-        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(average=Avg('rating'))
-        avg=0
-        if reviews['average'] is not None:
-            avg = float(reviews['average'])
-        return avg
+        reviews = ReviewRating.objects.filter(
+            product=self, status=True).aggregate(average=Avg('rating'))
+        avg = reviews['average'] if reviews['average'] is not None else 0
+        return float(avg)
 
     def countReview(self):
-        reviews = ReviewRating.objects.filter(product=self, status=True).aggregate(count=Count('id'))
-        count=0
-        if reviews['count'] is not None:
-            count = int(reviews['count'])
-
-        return count
+        reviews = ReviewRating.objects.filter(
+            product=self, status=True).aggregate(count=Count('id'))
+        count = reviews['count'] if reviews['count'] is not None else 0
+        return int(count)
 
 
-class VariationManager(models.Manager):
-    def colors(self):
-        return super(VariationManager, self).filter(variation_category='color', is_active=True)
+class VariationCategory(models.Model):
+    """
+    Representa un tipo de variación como 'Color', 'Talla', 'Material', etc.
+    Compartido entre múltiples productos.
+    """
+    name = models.CharField(max_length=100, unique=True)
 
-    def tallas(self):
-        return super(VariationManager, self).filter(variation_category='talla', is_active=True)
+    def __str__(self):
+        return self.name
 
-
-variation_category_choice = (
-    ('color', 'color'),
-    ('talla', 'talla'),
-)
 
 class Variation(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variation_category = models.CharField(max_length=100, choices=variation_category_choice)
+    """
+    Representa un valor específico dentro de una categoría de variación para un producto.
+    """
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="variations")
+    variation_category = models.ForeignKey(
+        VariationCategory, on_delete=models.CASCADE, related_name="variations")
     variation_value = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     created_date = models.DateTimeField(auto_now=True)
 
-    objects = VariationManager()
+    class Meta:
+        unique_together = ('product', 'variation_category', 'variation_value')
 
     def __str__(self):
-        return  self.variation_category + ' : ' +self.variation_value
+        return f"{self.variation_category.name}: {self.variation_value}"
 
 
 class ReviewRating(models.Model):
@@ -81,7 +84,8 @@ class ReviewRating(models.Model):
 
 
 class ProductGallery(models.Model):
-    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, default=None, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='store/products', max_length=255)
 
     def __str__(self):

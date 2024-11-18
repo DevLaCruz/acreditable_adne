@@ -1,143 +1,125 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<section class="section-content padding-y bg">
-  <div class="container">
+<section class="py-8 bg-gray-100">
+  <div class="container mx-auto">
     <!-- ============================ COMPONENT 1 ================================= -->
 
-    <div class="row">
-      <aside class="col-lg-6">
-        <div class="card">
+    <div class="flex flex-wrap -mx-4">
+      <aside class="w-full lg:w-1/2 px-4 mb-4 lg:mb-0">
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <h4 class="text-xl font-semibold mb-4">Dirección de Facturación</h4>
+          <form action="{% url 'place_order' %}" method="post">
+            {% csrf_token %}
+            <div class="flex flex-wrap -mx-2 mb-4">
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Nombre</label>
+                <input type="text" name="first_name" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Apellidos</label>
+                <input type="text" name="last_name" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+            </div>
 
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Dirección de Facturación</h4>
-                    <form action="{% url 'place_order' %}" method="post">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label for="">Nombre</label>
-                                <input type="text" name="first_name" class="form-control">
-                            </div>
-                            <div class="col form-group">
-                                <label for="">Apellidos</label>
-                                <input type="text" name="last_name" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label for="">Email</label>
-                                <input type="email" name="email" class="form-control">
-                            </div>
-                            <div class="col form-group">
-                                <label for="">Teléfono</label>
-                                <input type="text" name="phone" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label for="">Dirección</label>
-                                <input type="text" name="address_line_1" class="form-control">
-                            </div>
-                            <div class="col form-group">
-                                <label for="">Detalles Dirección</label>
-                                <input type="text" name="address_line_2" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col form-group">
-                                <label for="">Ciudad</label>
-                                <input type="text" name="city" class="form-control">
-                            </div>
-                            <div class="col form-group">
-                                <label for="">Departamento</label>
-                                <input type="text" name="state" class="form-control">
-                            </div>
-                            <div class="col form-group">
-                                <label for="">País</label>
-                                <input type="text" name="country" class="form-control">
-                            </div>
-                        </div>
+            <div class="flex flex-wrap -mx-2 mb-4">
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Email</label>
+                <input type="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Teléfono</label>
+                <input type="text" name="phone" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+            </div>
 
-                        <div class="form-row">
-                            <label for="">Descripción de la ordén</label>
-                            <textarea name="order_nota" rows="2" class="form-control"></textarea>
-                        </div>
-                </div>
+            <div class="flex flex-wrap -mx-2 mb-4">
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Dirección</label>
+                <input type="text" name="address_line_1" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+              <div class="w-full md:w-1/2 px-2">
+                <label class="block text-gray-700 mb-2">Detalles Dirección</label>
+                <input type="text" name="address_line_2" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+            </div>
 
+            <div class="flex flex-wrap -mx-2 mb-4">
+              <div class="w-full md:w-1/3 px-2">
+                <label class="block text-gray-700 mb-2">Ciudad</label>
+                <input type="text" name="city" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+              <div class="w-full md:w-1/3 px-2">
+                <label class="block text-gray-700 mb-2">Departamento</label>
+                <input type="text" name="state" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+              <div class="w-full md:w-1/3 px-2">
+                <label class="block text-gray-700 mb-2">País</label>
+                <input type="text" name="country" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-gray-700 mb-2">Descripción de la orden</label>
+              <textarea name="order_nota" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"></textarea>
+            </div>
         </div>
-        <!-- card.// -->
       </aside>
-      <!-- col.// -->
-      <aside class="col-lg-6">
-        <div class="card">
-          <div class="card-body">
-            
-            <table class="table table-borderless table-shopping-cart">
-                <thead class="text-muted">
-                  <tr class="small text-uppercase">
-                    <th scope="col">Product</th>
-                    <th scope="col" width="120">Cantidad</th>
-                    <th scope="col" width="120">Precio</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for cart_item in cart_items %}
-                  <tr>
-                    <td>
-                      <figure class="itemside align-items-center">
-                          <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
-                          <figcaption class="info">
-                              <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-          
-                              <p class="text-muted small">
-                                  {% if cart_item.variations.all %}
-                                      {% for item in cart_item.variations.all %}
-                                          {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-                                      {% endfor %}
-                                  {% endif %}
-          
-                              </p>
-          
-                          </figcaption>
-                      </figure>
-                  </td>
-                    <td>
-                      <!-- col.// -->
-                      <label>${{cart_item.quantity}}</label>
-                    </td>
-                    <td>
-                      <div class="price-wrap">
-                        <var class="price">{{cart_item.sub_total}}</var>
-                        <small class="text-muted">
-                          $ {{cart_item.product.price}} cada uno
-                        </small>
-                      </div>
-                      <!-- price-wrap .// -->
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
 
-            <button type="submit" name="submit" class="btn btn-primary btn-block">
-              Ordenar los productos
-            </button>
-            <a href="{% url 'store' %}" class="btn btn-light btn-block"
-              >Continua comprando</a
-            >
-        </form>
-          </div>
-          <!-- card-body.// -->
+      <!-- Columna de Productos -->
+      <aside class="w-full lg:w-1/2 px-4">
+        <div class="bg-white shadow-md rounded-lg p-6">
+          <table class="w-full border border-gray-200 rounded-lg mb-4">
+            <thead class="bg-gray-100 text-gray-700">
+              <tr>
+                <th class="py-2 px-4 text-left">Producto</th>
+                <th class="py-2 px-4 text-center">Cantidad</th>
+                <th class="py-2 px-4 text-right">Precio</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              {% for cart_item in cart_items %}
+              <tr>
+                <td class="py-4 px-4">
+                  <div class="flex items-center space-x-3">
+                    <img src="{{ cart_item.product.images.url }}" alt="Imagen del producto" class="w-16 h-16 object-cover rounded">
+                    <div>
+                      <a href="{{ cart_item.product.get_url }}" class="text-lg font-semibold text-gray-800 hover:underline">{{ cart_item.product.product_name }}</a>
+                      <p class="text-sm text-gray-600">
+                        {% if cart_item.variations.all %}
+                          {% for item in cart_item.variations.all %}
+                            {{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}<br>
+                          {% endfor %}
+                        {% endif %}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 text-center">
+                  <span class="text-gray-800">${{ cart_item.quantity }}</span>
+                </td>
+                <td class="py-4 text-right">
+                  <div class="text-gray-800 font-semibold">${{ cart_item.sub_total }}</div>
+                  <small class="text-gray-600">$ {{ cart_item.product.price }} cada uno</small>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <button type="submit" name="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 mb-3">
+            Ordenar los productos
+          </button>
+          <a href="{% url 'store' %}" class="w-full block text-center bg-gray-200 text-gray-800 py-2 rounded hover:bg-gray-300">Continua comprando</a>
+          </form>
         </div>
-        <!-- card.// -->
       </aside>
-      <!-- col.// -->
     </div>
-    <!-- row.// -->
     <!-- ============================ COMPONENT 1 END .// ================================= -->
 
   </div>
-  <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
 
-{% endblock content %}
+{% endblock %}
