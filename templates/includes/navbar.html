@@ -4,7 +4,7 @@
   <nav class="p-0 md:p-0 bg-white border-b">
     <div class="container mx-auto flex items-center justify-between">
       <!-- Botón de Menú para Pantallas Pequeñas -->
-      <div x-data="{ open: false }" class="block md:hidden">
+      <div x-data="{ open: false }" x-init="open = false" class="block md:hidden">
         <button
           @click="open = !open"
           class="navbar-toggler px-3 py-2 rounded border border-gray-300 text-gray-600"
@@ -14,7 +14,11 @@
         </button>
         
         <!-- Menú Desplegable para Móviles -->
-        <div x-show="open" class="absolute top-full left-0 w-full bg-white shadow-md mt-2 p-4">
+        <div 
+          x-show="open" 
+          x-transition 
+          class="absolute top-full left-0 w-full bg-white shadow-md mt-2 p-4"
+        >
           <ul class="space-y-2">
             <li><a href="#" class="text-gray-600 hover:text-gray-800">Espanol</a></li>
             <li><a href="#" class="text-gray-600 hover:text-gray-800">USD</a></li>
@@ -49,13 +53,17 @@
         </div>
 
         <!-- Categorías Desplegable -->
-        <div x-data="{ open: false }" class="hidden md:flex items-center space-x-4">
+        <div x-data="{ open: false }" x-init="open = false" class="hidden md:flex items-center space-x-4">
           <div class="relative">
-            <button @click="open = !open" class="btn-primary flex items-center">
+            <button 
+              @click="open = !open" 
+              class="btn-primary flex items-center"
+            >
               <i class="fa fa-bars mr-2"></i> Categorias
             </button>
-            <div
-              x-show="open"
+            <div 
+              x-show="open" 
+              x-transition 
               @click.away="open = false"
               class="absolute mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
             >
@@ -83,32 +91,8 @@
           </form>
         </div>
 
-        <div class="flex items-center space-x-4">
-          {% if user.id is None %}
-          <div class="text-center">
-            <p class="text-gray-600 text-sm">Bienvenido visitante!</p>
-            <div class="flex space-x-2">
-              <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
-              <span>|</span>
-              <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Registrar</a>
-            </div>
-          </div>
-          {% else %}
-          <div class="text-center">
-            <p class="text-gray-600 text-sm">Bienvenido {{user.first_name}}</p>
-            <div class="flex space-x-2">
-              <a href="{% url 'dashboard' %}" class="text-blue-600 hover:underline">Dashboard</a>
-              <span>|</span>
-              <a href="{% url 'logout' %}" class="text-blue-600 hover:underline">Cerrar Sesión</a>
-            </div>
-          </div>
-          {% endif %}
-
-        
-        </div>
-
-        <!-- Desplegable del Carrito de Compras -->
-        <div x-data="{ open: false }" class="relative">
+        <!-- Carrito Desplegable -->
+        <div x-data="{ open: false }" x-init="open = false" class="relative">
           <a href="#" @click="open = !open" class="flex items-center">
             <div class="icon w-8 h-8 flex items-center justify-center border rounded-full">
               <i class="fa fa-shopping-cart"></i>
@@ -117,8 +101,9 @@
           </a>
           
           <!-- Carrito Desplegable -->
-          <div
-            x-show="open"
+          <div 
+            x-show="open" 
+            x-transition 
             @click.away="open = false"
             class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-4"
           >
