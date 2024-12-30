@@ -55,27 +55,22 @@
               <!-- Descripción -->
               <p class="text-gray-600">{{ single_product.description }}</p>
 
-              <!-- Opciones de variaciones -->
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-gray-700 mb-1">Seleccionar Color</label>
-                  <select name="color" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
-                    <option value="" disabled selected>Seleccione</option>
-                    {% for i in single_product.variation_set.colors %}
-                    <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-gray-700 mb-1">Seleccionar Talla</label>
-                  <select name="talla" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300">
-                    <option value="" disabled selected>Seleccione</option>
-                    {% for i in single_product.variation_set.tallas %}
-                    <option value="{{ i.variation_value | lower }}">{{ i.variation_value | capfirst }}</option>
-                    {% endfor %}
-                  </select>
+              <!-- Opciones de variaciones dinámicas -->
+              {% for variation_type, values in variation_dict.items %}
+              <div class="mb-4">
+                <h6 class="text-gray-700 font-semibold mb-2">Seleccionar {{ variation_type|capfirst }}</h6>
+                <div class="flex space-x-2">
+                  {% for value in values %}
+                  <label class="btn-group relative cursor-pointer">
+                    <input type="radio" name="{{ variation_type|lower }}" value="{{ value }}" class="peer hidden" />
+                    <span class="px-4 py-2 text-sm font-medium border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-100 peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-500">
+                      {{ value|capfirst }}
+                    </span>
+                  </label>
+                  {% endfor %}
                 </div>
               </div>
+              {% endfor %}
 
               <!-- Botón agregar al carrito -->
               {% if single_product.stock <= 0 %}
