@@ -22,7 +22,7 @@
               <tr>
                 <th class="p-4 text-left">Producto</th>
                 <th class="p-4 text-left" width="120">Cantidad</th>
-                <th class="p-4 text-left" width="120">Precio</th>
+                {% comment %} <th class="p-4 text-left" width="120">Precio</th> {% endcomment %}
                 <th class="p-4 text-right" width="200"></th>
               </tr>
             </thead>
@@ -64,12 +64,12 @@
                     </form>
                   </div>
                 </td>
-                <td class="p-4">
+                {% comment %} <td class="p-4">
                   <div>
                     <span class="text-lg font-semibold text-gray-800">$ {{ cart_item.sub_total }}</span>
                     <p class="text-sm text-gray-500"> $ {{ cart_item.product.price }} cada uno </p>
                   </div>
-                </td>
+                </td> {% endcomment %}
                 <td class="p-4 text-right">
                   <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" class="text-red-500 hover:text-red-600">Eliminar</a>
                 </td>
@@ -82,7 +82,7 @@
       </aside>
       <aside class="w-full lg:w-1/4 px-4">
         <div class="bg-white shadow-md rounded-lg p-6">
-          <div class="mb-4">
+          {% comment %} <div class="mb-4">
             <div class="flex justify-between text-gray-600">
               <span>Precio Total:</span>
               <span>$ {{ total }}</span>
@@ -95,7 +95,7 @@
               <span>Total:</span>
               <span>$ {{ grand_total }}</span>
             </div>
-          </div>
+          </div> {% endcomment %}
           <hr class="my-4">
           <p class="text-center mb-4">
             <img src="{% static './images/misc/payments.png' %}" class="h-6 inline">

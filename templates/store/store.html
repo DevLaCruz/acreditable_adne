@@ -115,7 +115,7 @@
                 <h3 class="text-lg font-semibold">
                   <a href="{{ product.get_url }}" class="hover:underline">{{ product.product_name }}</a>
                 </h3>
-                <div class="mt-2 text-green-600">${{ product.price }}</div>
+                {% comment %} <div class="mt-2 text-green-600">${{ product.price }}</div> {% endcomment %}
                 <a href="{% url 'add_cart' product.id %}" class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded">Agregar al Carrito</a>
               </figcaption>
             </div>

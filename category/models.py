@@ -1,12 +1,17 @@
 from django.db import models
 from django.urls import reverse
+from core.models import CoreModel
+
+def category_image_path(instance, filename):
+    # store/category_name/filename
+    return f'store/{instance.slug}/{filename}'
 
 # Create your models here.
-class Category(models.Model):
+class Category(CoreModel):
     category_name=models.CharField(max_length=20, unique=True)
     description=models.CharField(max_length=255, blank=True)
     slug=models.CharField(max_length=100, unique=True)
-    cat_image=models.ImageField(upload_to='photo/categories', blank=True)
+    cat_image = models.ImageField(upload_to=category_image_path, blank=True)
     
     class Meta:
         verbose_name='category'
