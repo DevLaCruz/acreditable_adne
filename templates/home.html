@@ -5,21 +5,45 @@
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="py-4">
   <div class="container mx-auto">
-
     <div class="rounded overflow-hidden">
-      <img src="{% static 'images/banners/banner01.jpg' %}" class="w-full rounded">
-    </div>
+      <div class="slider-container flex h-full">
+        {% for category in categories %}
+          {% if category.cat_image %}
+          <div class="slide min-w-full">
+            <a href="{% url 'products_by_category' category.slug %}" class="block">
+              <img src="{{ category.cat_image.url }}" 
+                   alt="{{ category.category_name }}" 
+                   class="w-full rounded">
+              <div class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/60 to-transparent/0">
+                <h2 class="text-white text-sm md:text-base lg:text-lg font-medium pb-4">{{ category.category_name }}</h2>
+              </div>
+            </a>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
 
-  </div> <!-- container //  -->
+      <div class="absolute bottom-2 left-0 right-0 flex justify-center space-x-2 z-10">
+        {% for category in categories %}
+          {% if category.cat_image %}
+          <button class="slider-dot w-2 h-2 rounded-full bg-white/70 opacity-50 hover:opacity-100"
+                  data-index="{{ forloop.counter0 }}"></button>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </section>
 <!-- ========================= SECTION MAIN END// ========================= -->
 
 <!-- ========================= SECTION  ========================= -->
 <section class="py-4">
   <div class="container mx-auto">
-
     <header class="flex justify-between items-center mb-4">
-      <a href="./store.html" class="btn border border-primary text-primary hover:bg-primary hover:text-white transition-colors">Ver Todo</a>
+      <a href="{% url 'store' %}" 
+         class="px-4 py-2 border border-primary text-primary hover:bg-blue-600 transition-colors duration-300 rounded-md font-medium hover:border-blue-600">
+        Ver Todo
+      </a>
       <h3 class="text-xl font-semibold">Productos populares</h3>
     </header>
 
@@ -53,5 +77,184 @@
   </div><!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
+<style>
+/* Contenedor del slider */
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Ajusta según el diseño */
+  margin: auto;
+  overflow: hidden;
+}
 
+/* Contenedor de las diapositivas */
+.slider-container {
+  display: flex;
+  width: 100%;
+  height: 300px; /* Ajusta según la necesidad */
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Cada slide ocupa el 100% del contenedor */
+.slide {
+  min-width: 100%;
+  position: relative;
+}
+
+/* Imágenes con tamaño uniforme */
+/* Imágenes con tamaño uniforme y centrado */
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen para llenar el contenedor */
+  object-position: center; /* Centra la imagen en el contenedor */
+}
+
+
+/* Overlay de gradiente */
+.slide .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+.slide h2 {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Dots de navegación */
+.slider-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.slider-dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+  background-color: white;
+  transform: scale(1.3);
+}
+
+/* Botones de navegación */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: 0.3s;
+}
+
+.slider-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const sliderContainer = document.querySelector('.slider-container');
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const prevBtn = document.querySelector('.prev');
+    const nextBtn = document.querySelector('.next');
+    let currentSlide = 0;
+    const slideCount = slides.length;
+    let autoplayInterval;
+
+    function updateSlider() {
+        const offset = -currentSlide * 100;
+        sliderContainer.style.transform = `translateX(${offset}%)`;
+
+        dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateSlider();
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+        updateSlider();
+    }
+
+    function startAutoplay() {
+        autoplayInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoplay() {
+        clearInterval(autoplayInterval);
+    }
+
+    // Event listeners para los botones de navegación
+    if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
+    }
+
+    // Event listeners para los dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            updateSlider();
+            stopAutoplay();
+            startAutoplay();
+        });
+    });
+
+    // Pausar autoplay al pasar el mouse
+    sliderContainer.addEventListener('mouseenter', stopAutoplay);
+    sliderContainer.addEventListener('mouseleave', startAutoplay);
+
+    // Inicialización
+    updateSlider();
+    startAutoplay();
+});
+
+  </script>
 {% endblock %}

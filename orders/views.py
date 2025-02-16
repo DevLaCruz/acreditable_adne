@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from store.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from decouple import config
 # Create your views here.
 
 def payments(request):
@@ -208,7 +209,7 @@ def format_whatsapp_message(form_data, cart_items):
     message += "PRODUCTOS:\n"
     
     # Base URL for product details
-    base_url = "http://127.0.0.1:8000"  # Change in production
+    base_url = config('BASE_URL') # Change in production
     
     for item in cart_items:
         product = item.product

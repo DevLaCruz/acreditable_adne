@@ -97,11 +97,11 @@
             </div>
           </div> {% endcomment %}
           <hr class="my-4">
-          <p class="text-center mb-4">
+          {% comment %} <p class="text-center mb-4">
             <img src="{% static './images/misc/payments.png' %}" class="h-6 inline">
-          </p>
-          <a href="{% url 'checkout' %}" class="block bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600">Pagar</a>
-          <a href="{% url 'store' %}" class="block bg-gray-100 text-gray-600 text-center py-2 rounded hover:bg-gray-200 mt-2">Continua comprando</a>
+          </p> {% endcomment %}
+          <a href="{% url 'checkout' %}" class="block bg-blue-500 text-white text-center py-2 rounded hover:bg-blue-600">Procesa tu Pedido</a>
+          <a href="{% url 'store' %}" class="block bg-gray-100 text-gray-600 text-center py-2 rounded hover:bg-gray-200 mt-2">Continúa comprando</a>
         </div>
       </aside>
     </div>
