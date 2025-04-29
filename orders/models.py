@@ -15,12 +15,13 @@ class Payment(CoreModel):
         return self.payment_id
 
 class Order(CoreModel):
-    STATUS={
+    STATUS = [
         ('New', 'Nuevo'),
         ('Accepted', 'Aceptado'),
-        ('Completred', 'Completado'),
+        ('Completed', 'Completado'),
         ('Canceled', 'Cancelado'),
-    }
+    ]
+
     
     user=models.ForeignKey(Account, on_delete=models.SET_NULL,null=True)
     payment=models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True,null=True)

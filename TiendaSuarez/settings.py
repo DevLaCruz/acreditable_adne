@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'core',
     'ckeditor',
     'ckeditor_uploader',
+    'debtscards',
+    'django.contrib.gis',  # Necesario para GeoDjango
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -112,7 +115,14 @@ else:
         }
     }
 
-
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (-12.0464, -77.0428),  # Coordenadas de Lima, Perú (cámbialas según tu ubicación)
+    'DEFAULT_ZOOM': 15,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+    'SCALE': 'both',
+    'ATTRIBUTION_PREFIX': 'Tu Empresa',
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -179,6 +189,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so'
 
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
