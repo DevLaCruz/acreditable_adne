@@ -43,7 +43,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: suarez_web
-    command: /opt/venv/bin/gunicorn --workers=4 --worker-class=sync --bind=0.0.0.0:8000 --timeout=120 --access-logfile=/app/logs/gunicorn_access.log --error-logfile=/app/logs/gunicorn_error.log --log-level=info TiendaSuarez.wsgi:application
     environment:
       DEBUG: ${DEBUG:-False}
       SECRET_KEY: ${SECRET_KEY:-change-me-in-production}

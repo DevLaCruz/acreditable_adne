@@ -4,8 +4,8 @@ set -e
 
 echo "Esperando que la base de datos esté lista..."
 
-# Esperar a que PostgreSQL esté disponible
-while ! nc -z db 5432; do
+# Esperar a que PostgreSQL esté disponible (usando bash en lugar de nc)
+while ! timeout 1 bash -c '</dev/tcp/db/5432' 2>/dev/null; do
   echo "PostgreSQL no está disponible, aguardando..."
   sleep 1
 done
@@ -32,4 +32,12 @@ else:
 END
 
 echo "Iniciando Gunicorn..."
-exec "$@"
+exec /opt/venv/bin/gunicorn \
+    --workers=4 \
+    --worker-class=sync \
+    --bind=0.0.0.0:8000 \
+    --timeout=120 \
+    --access-logfile=/app/logs/gunicorn_access.log \
+    --error-logfile=/app/logs/gunicorn_error.log \
+    --log-level=info \
+    TiendaSuarez.wsgi:application

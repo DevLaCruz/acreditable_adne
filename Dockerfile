@@ -1,5 +1,5 @@
 # Multi-stage build para optimizar el tamaño de la imagen
-FROM python:3.11-slim as builder
+FROM python:3.13-slim as builder
 
 # Instalar dependencias del sistema necesarias para compilar paquetes Python
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,12 +20,13 @@ RUN pip install --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 # Stage final - imagen más pequeña
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Instalar solo las dependencias de runtime necesarias
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     postgresql-client \
+    netcat-openbsd \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
