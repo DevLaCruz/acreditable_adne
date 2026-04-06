@@ -2,11 +2,12 @@ asgiref
 psycopg[binary]==3.1.18
 certifi
 charset-normalizer
-Django==6.0.3
+Django==5.2.7
 django-admin-thumbnails==1.0.0
 django-ckeditor==6.7.3
 django-js-asset==3.1.2
 django-session-timeout
+gunicorn==23.0.0
 python-dateutil
 python-decouple
 pytz
