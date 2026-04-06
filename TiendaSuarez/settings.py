@@ -101,17 +101,19 @@ AUTH_USER_MODEL = 'accounts.Account'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-if 'RDS_DB_NAME' in os.environ:
+# Soporta tanto Docker (PostgreSQL) como desarrollo local (SQLite)
+if config('DB_ENGINE', default='sqlite3') == 'postgresql':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            'NAME': config('DB_NAME', default='suarez_db'),
+            'USER': config('DB_USER', default='suarez_user'),
+            'PASSWORD': config('DB_PASSWORD', default='suarez_password'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432', cast=int),
+            'CONN_MAX_AGE': 600,  # Connection pooling
         }
     }
 else:
@@ -147,7 +149,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'US/Pacific'
+TIME_ZONE = config('TIME_ZONE', default='America/Lima')
 
 USE_I18N = True
 

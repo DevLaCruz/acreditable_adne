@@ -1,5 +1,4 @@
 # Docker Compose para Producción (SIN Nginx - usar Nginx del VPS)
-version: '3.8'
 
 services:
   # Base de datos PostgreSQL
