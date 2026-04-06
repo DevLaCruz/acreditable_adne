@@ -1,0 +1,94 @@
+# Docker Compose para Producción (SIN Nginx - usar Nginx del VPS)
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: suarez_db_prod
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    # NO exponer puerto - solo para uso interno
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suarez_network
+    restart: always
+
+  # Redis para caché
+  redis:
+    image: redis:7-alpine
+    container_name: suarez_redis_prod
+    volumes:
+      - redis_data_prod:/data
+    # NO exponer puerto
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suarez_network
+    restart: always
+
+  # Aplicación Django - Solo Gunicorn (Nginx en host)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: suarez_web_prod
+    command: /opt/venv/bin/gunicorn --workers=4 --worker-class=sync --bind=0.0.0.0:8000 --timeout=120 --access-logfile=/app/logs/gunicorn_access.log --error-logfile=/app/logs/gunicorn_error.log --log-level=info TiendaSuarez.wsgi:application
+    environment:
+      DEBUG: False
+      SECRET_KEY: ${SECRET_KEY}
+      DB_ENGINE: django.db.backends.postgresql
+      RDS_DB_NAME: ${DB_NAME}
+      RDS_USERNAME: ${DB_USER}
+      RDS_PASSWORD: ${DB_PASSWORD}
+      RDS_HOSTNAME: db
+      RDS_PORT: 5432
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      EMAIL_BACKEND: ${EMAIL_BACKEND}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS}
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - static_volume_prod:/app/static
+      - media_volume_prod:/app/media
+      - /app/__pycache__
+    ports:
+      # Solo accesible desde localhost (Nginx del host proxea aquí)
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - suarez_network
+    restart: always
+
+volumes:
+  postgres_data_prod:
+    driver: local
+  redis_data_prod:
+    driver: local
+  static_volume_prod:
+    driver: local
+  media_volume_prod:
+    driver: local
+
+networks:
+  suarez_network:
+    driver: bridge
+

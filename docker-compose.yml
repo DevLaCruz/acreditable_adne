@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: suarez_db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-suarez_db}
+      POSTGRES_USER: ${DB_USER:-suarez_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-suarez_secure_password_change_me}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # NO exponer puerto - solo accesible desde Docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-suarez_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suarez_network
+    restart: unless-stopped
+
+  # Redis para caché y sesiones
+  redis:
+    image: redis:7-alpine
+    container_name: suarez_redis
+    # NO exponer puerto - solo accesible desde Docker
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - suarez_network
+    restart: unless-stopped
+
+  # Aplicación Django - SIN NGINX (lo manejará tu host)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: suarez_web
+    command: /opt/venv/bin/gunicorn --workers=4 --worker-class=sync --bind=0.0.0.0:8000 --timeout=120 --access-logfile=/app/logs/gunicorn_access.log --error-logfile=/app/logs/gunicorn_error.log --log-level=info TiendaSuarez.wsgi:application
+    environment:
+      DEBUG: ${DEBUG:-False}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      DB_ENGINE: django.db.backends.postgresql
+      RDS_DB_NAME: ${DB_NAME:-suarez_db}
+      RDS_USERNAME: ${DB_USER:-suarez_user}
+      RDS_PASSWORD: ${DB_PASSWORD:-suarez_secure_password_change_me}
+      RDS_HOSTNAME: db
+      RDS_PORT: 5432
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
+      EMAIL_HOST: ${EMAIL_HOST:-smtp.gmail.com}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-True}
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      # Puerto interno de Gunicorn - Nginx del host lo accede así
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - suarez_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
+  media_volume:
+
+networks:
+  suarez_network:
+    driver: bridge
