@@ -5,6 +5,7 @@ FROM python:3.13-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear directorio de trabajo para el builder
@@ -17,17 +18,19 @@ COPY requirements.txt .
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir --verbose -r requirements.txt && \
+    pip cache purge
 
 # Stage final - imagen más pequeña
 FROM python:3.13-slim
 
-# Instalar solo las dependencias de runtime necesarias
+# Instalar solo las dependencias de runtime necesarias (incluyendo libpq5 para psycopg3)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     postgresql-client \
     netcat-openbsd \
     curl \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario no-root para seguridad
