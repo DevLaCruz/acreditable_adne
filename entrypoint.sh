@@ -11,6 +11,11 @@ while ! timeout 1 bash -c '</dev/tcp/db/5432' 2>/dev/null; do
 done
 
 echo "PostgreSQL está disponible"
+echo "Generando migraciones faltantes..."
+
+# Generar migraciones si hay cambios pendientes
+python manage.py makemigrations --noinput
+
 echo "Ejecutando migraciones..."
 
 # Ejecutar migraciones
@@ -24,7 +29,9 @@ if not User.objects.filter(username='admin').exists():
     admin_user = User.objects.create_superuser(
         username='admin',
         email='admin@example.com',
-        password='admin123456'
+        password='admin123456',
+        first_name='Admin',
+        last_name='User'
     )
     print(f"Superuser 'admin' creado con éxito")
 else:
