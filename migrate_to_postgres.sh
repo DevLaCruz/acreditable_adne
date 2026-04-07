@@ -9,8 +9,8 @@ echo ""
 
 # Paso 1: Exportar datos de SQLite
 echo "[1/5] Exportando datos de SQLite3..."
-python manage.py dumpdata --exclude auth.permission --exclude contenttypes > data.json
-echo "✓ Datos exportados a data.json"
+python manage.py dumpdata --exclude auth.permission --exclude contenttypes > /tmp/data.json
+echo "✓ Datos exportados a /tmp/data.json"
 echo ""
 
 # Paso 2: Crear archivo de configuración temporal para PostgreSQL
@@ -27,7 +27,7 @@ echo ""
 
 # Paso 4: Cargar datos de vuelta
 echo "[4/5] Cargando datos a PostgreSQL..."
-python manage.py loaddata data.json
+python manage.py loaddata /tmp/data.json
 echo "✓ Datos cargados"
 echo ""
 
@@ -54,5 +54,5 @@ echo "=========================================="
 echo "✓ Migración completada exitosamente"
 echo "=========================================="
 echo ""
-echo "Datafile guardado como: data.json"
-echo "Puedes mantenerlo como backup o borrarlo después."
+echo "Datafile guardado como: /tmp/data.json"
+echo "El contenedor será destruido cuando se ejecute docker-compose down"
