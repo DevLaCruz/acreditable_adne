@@ -18,8 +18,7 @@ COPY requirements.txt .
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir --verbose -r requirements.txt && \
-    pip cache purge
+    pip install -v -r requirements.txt
 
 # Stage final - imagen más pequeña
 FROM python:3.13-slim
@@ -31,6 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-openbsd \
     curl \
     ca-certificates \
+    libgcc1 \
+    libc6 \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear usuario no-root para seguridad
