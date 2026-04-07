@@ -1,48 +1,46 @@
 version: '3.8'
 
 services:
-  # Base de datos PostgreSQL
   db:
     image: postgres:16-alpine
     container_name: suarez_db
     environment:
-      POSTGRES_DB: ${DB_NAME:-suarez_db}
-      POSTGRES_USER: ${DB_USER:-suarez_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-suarez_secure_password_change_me}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-suarez_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - suarez_network
-    restart: unless-stopped
+    restart: always
 
-  # Aplicación Django - SIN NGINX (lo manejará tu host)
   web:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: suarez_web
     environment:
-      DEBUG: ${DEBUG:-False}
-      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      DB_ENGINE: django.db.backends.postgresql
-      RDS_DB_NAME: ${DB_NAME:-suarez_db}
-      RDS_USERNAME: ${DB_USER:-suarez_user}
-      RDS_PASSWORD: ${DB_PASSWORD:-suarez_secure_password_change_me}
-      RDS_HOSTNAME: db
-      RDS_PORT: 5432
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
-      EMAIL_BACKEND: ${EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
-      EMAIL_HOST: ${EMAIL_HOST:-smtp.gmail.com}
-      EMAIL_PORT: ${EMAIL_PORT:-587}
-      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
-      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
-      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-True}
-      # Eliminamos REDIS_URL
+      DEBUG: ${DEBUG}
+      SECRET_KEY: ${SECRET_KEY}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+      DB_ENGINE: postgresql
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
+      EMAIL_BACKEND: ${EMAIL_BACKEND}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS}
+      TIME_ZONE: ${TIME_ZONE}
     volumes:
       - .:/app
       - static_volume:/app/static
@@ -52,16 +50,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # Eliminamos la dependencia de redis
     networks:
       - suarez_network
-    restart: unless-stopped
+    restart: always
 
 volumes:
   postgres_data:
   static_volume:
   media_volume:
-  # Eliminamos redis_data
 
 networks:
   suarez_network:

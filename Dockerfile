@@ -54,8 +54,12 @@ ENV PATH="/opt/venv/bin:$PATH" \
     DJANGO_SETTINGS_MODULE=TiendaSuarez.settings
 
 # Crear directorios necesarios
-RUN mkdir -p /app/logs /app/media /app/static && \
+RUN mkdir -p /app/media /app/static && \
     chown -R appuser:appuser /app
+
+# Copiar y hacer ejecutable el script de inicialización
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Recopilar archivos estáticos (sin interacción)
 RUN python manage.py collectstatic --noinput --clear 2>/dev/null || true
@@ -66,15 +70,6 @@ USER appuser
 # Exponer puerto (Gunicorn)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -f http://localhost:8000/health/ || exit 1
-
 # Script de inicialización
-COPY entrypoint.sh /app/entrypoint.sh
-USER root
-RUN chmod +x /app/entrypoint.sh
-USER appuser
-
 ENTRYPOINT ["/app/entrypoint.sh"]
 

@@ -22,20 +22,20 @@ services:
     restart: always
 
   # Redis para caché
-  redis:
-    image: redis:7-alpine
-    container_name: suarez_redis_prod
-    volumes:
-      - redis_data_prod:/data
-    # NO exponer puerto
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - suarez_network
-    restart: always
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: suarez_redis_prod
+  #   volumes:
+  #     - redis_data_prod:/data
+  #   # NO exponer puerto
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #   networks:
+  #     - suarez_network
+  #   restart: always
 
   # Aplicación Django - Solo Gunicorn (Nginx en host)
   web:
