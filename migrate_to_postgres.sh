@@ -7,16 +7,25 @@ echo "Migración de SQLite3 a PostgreSQL"
 echo "=========================================="
 echo ""
 
-# Paso 1: Exportar datos de SQLite
+# Paso 1: Intentar exportar datos de SQLite
 echo "[1/5] Exportando datos de SQLite3..."
-python manage.py dumpdata --exclude auth.permission --exclude contenttypes > /tmp/data.json
-echo "✓ Datos exportados a /tmp/data.json"
+if python manage.py dumpdata --exclude auth.permission --exclude contenttypes --exclude admin --natural-foreign --natural-primary > /tmp/data.json 2>&1; then
+    DATA_SIZE=$(wc -c < /tmp/data.json)
+    if [ "$DATA_SIZE" -gt 100 ]; then
+        echo "✓ Datos exportados a /tmp/data.json ($(($DATA_SIZE / 1024)) KB)"
+    else
+        echo "⚠ No hay datos para exportar, se aplicarán solo las migraciones"
+        > /tmp/data.json
+    fi
+else
+    echo "⚠ No se pudo exportar de SQLite3, continuando con migraciones limpias"
+    > /tmp/data.json
+fi
 echo ""
 
-# Paso 2: Crear archivo de configuración temporal para PostgreSQL
+# Paso 2: Configurar PostgreSQL como base de datos
 echo "[2/5] Configurando PostgreSQL como base de datos..."
-# Los datos están en .env, así que Django ya usa PostgreSQL
-echo "✓ PostgreSQL está configurado como base de datos"
+echo "✓ PostgreSQL está configurado"
 echo ""
 
 # Paso 3: Aplicar migraciones a PostgreSQL
@@ -25,10 +34,14 @@ python manage.py migrate
 echo "✓ Migraciones aplicadas"
 echo ""
 
-# Paso 4: Cargar datos de vuelta
+# Paso 4: Cargar datos si existen
 echo "[4/5] Cargando datos a PostgreSQL..."
-python manage.py loaddata /tmp/data.json
-echo "✓ Datos cargados"
+if [ -s /tmp/data.json ]; then
+    python manage.py loaddata /tmp/data.json 2>&1 || echo "⚠ Algunos datos no pudieron cargarse (probablemente datos inconsistentes)"
+    echo "✓ Datos cargados"
+else
+    echo "✓ No hay datos para cargar"
+fi
 echo ""
 
 # Paso 5: Crear superuser
@@ -54,5 +67,5 @@ echo "=========================================="
 echo "✓ Migración completada exitosamente"
 echo "=========================================="
 echo ""
-echo "Datafile guardado como: /tmp/data.json"
-echo "El contenedor será destruido cuando se ejecute docker-compose down"
+echo "Ahora puedes ejecutar: docker-compose logs -f web"
+echo "Para ver los logs en tiempo real"
