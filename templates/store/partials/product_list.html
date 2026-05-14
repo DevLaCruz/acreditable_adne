@@ -44,8 +44,7 @@
          hx-get="?page={{ products.previous_page_number }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true"
-         hx-indicator="#product-spinner">Anterior</a>
+         hx-push-url="true">Anterior</a>
     </li>
     {% else %}
     <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Anterior</span></li>
@@ -61,8 +60,7 @@
          hx-get="?page={{ i }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true"
-         hx-indicator="#product-spinner">{{ i }}</a>
+         hx-push-url="true">{{ i }}</a>
     </li>
       {% endif %}
     {% endfor %}
@@ -74,8 +72,7 @@
          hx-get="?page={{ products.next_page_number }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true"
-         hx-indicator="#product-spinner">Siguiente</a>
+         hx-push-url="true">Siguiente</a>
     </li>
     {% else %}
     <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>

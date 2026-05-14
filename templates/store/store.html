@@ -30,8 +30,7 @@
                          hx-get="{% url 'store' %}"
                          hx-target="#product-list"
                          hx-swap="innerHTML"
-                         hx-push-url="true"
-                         hx-indicator="#product-spinner">
+                         hx-push-url="true">
                         Todos
                       </a>
                     </li>
@@ -42,8 +41,7 @@
                          hx-get="{{ category.get_url }}"
                          hx-target="#product-list"
                          hx-swap="innerHTML"
-                         hx-push-url="true"
-                         hx-indicator="#product-spinner">
+                         hx-push-url="true">
                         {{ category.category_name }}
                       </a>
                     </li>
@@ -122,14 +120,6 @@
       </aside>
 
       <main class="w-full md:w-4/5 px-4">
-        <!-- Indicador de carga para filtros HTMX -->
-        <div id="product-spinner"
-             class="htmx-indicator flex justify-center py-8">
-          <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-          </svg>
-        </div>
 
         <div id="product-list">
           <header class="border-b pb-3 mb-4">
@@ -187,8 +177,7 @@
                  hx-get="?page={{ i }}"
                  hx-target="#product-list"
                  hx-swap="innerHTML"
-                 hx-push-url="true"
-                 hx-indicator="#product-spinner">{{ i }}</a>
+                 hx-push-url="true">{{ i }}</a>
             </li>
               {% endif %}
             {% endfor %}
@@ -200,8 +189,7 @@
                  hx-get="?page={{ products.next_page_number }}"
                  hx-target="#product-list"
                  hx-swap="innerHTML"
-                 hx-push-url="true"
-                 hx-indicator="#product-spinner">Siguiente</a>
+                 hx-push-url="true">Siguiente</a>
             </li>
             {% else %}
             <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>

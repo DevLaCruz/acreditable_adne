@@ -40,7 +40,7 @@ def store(request, category_slug=None):
     }
 
     # Petición HTMX (filtro de categoría o paginación): solo el bloque de productos
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Target") == "product-list":
         return render(request, "store/partials/product_list.html", context)
 
     return render(request, "store/store.html", context)
@@ -112,7 +112,7 @@ def search(request):
         "product_count": product_count,
     }
 
-    if request.headers.get("HX-Request"):
+    if request.headers.get("HX-Target") == "product-list":
         return render(request, "store/partials/product_list.html", context)
 
     return render(request, "store/store.html", context)
