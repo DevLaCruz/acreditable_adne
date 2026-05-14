@@ -1,245 +1,549 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-<!-- ========================= SECTION MAIN ========================= -->
-<section class="py-4">
-  <div class="container mx-auto">
-    <div class="relative overflow-hidden">
-      <div class="slider-container flex w-full transition-transform ease-in-out duration-500">
-        {% for category in categories %}
-          {% if category.cat_image %}
-          <div class="slide flex-shrink-0 w-full flex justify-center items-center relative">
-            <a href="{% url 'products_by_category' category.slug %}" class="block relative h-[250px] md:h-[300px] lg:h-[350px] w-full">
-              <img src="{{ category.cat_image.url }}" alt="{{ category.category_name }}" class="w-full h-full object-cover object-center rounded">
-              <div class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/60 to-transparent">
-               <button class="category-button bg-blue-600 text-white font-medium py-2 px-4 rounded-full hover:bg-blue-700 transition-colors duration-300 absolute bottom-5 left-1/2 transform -translate-x-1/2 z-50 block">
-  {{ category.category_name }}
-</button>
+<!-- ========================= HERO SLIDER ========================= -->
+<section class="bg-gray-50 py-6">
+    <div class="container mx-auto px-4">
+        <!-- Outer wrapper: overflow-hidden + fixed height for the slider -->
+        <div
+            class="relative overflow-hidden rounded-2xl shadow-xl"
+            style="height: 420px"
+        >
+            <!-- Slider container — selectores JS intactos: .slider-container, .slide -->
+            <div
+                class="slider-container flex w-full"
+                style="height: 100%; will-change: transform"
+            >
+                {% for category in categories %} {% if category.cat_image %}
+                <div
+                    class="slide relative"
+                    style="flex: 0 0 100%; width: 100%; height: 100%"
+                >
+                    <a
+                        href="{% url 'products_by_category' category.slug %}"
+                        class="block w-full h-full"
+                    >
+                        <!-- Imagen de fondo -->
+                        <img
+                            src="{{ category.cat_image.url }}"
+                            alt="{{ category.category_name }}"
+                            class="w-full h-full object-cover object-center"
+                        />
 
+                        <!-- Overlay oscuro elegante: gradiente de abajo hacia arriba -->
+                        <div
+                            class="absolute inset-0"
+                            style="
+                                background: linear-gradient(
+                                    to top,
+                                    rgba(0, 0, 0, 0.8) 0%,
+                                    rgba(0, 0, 0, 0.25) 55%,
+                                    rgba(0, 0, 0, 0.08) 100%
+                                );
+                            "
+                        ></div>
 
-              </div>
-            </a>
-          </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+                        <!-- Contenido central -->
+                        <div
+                            class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center"
+                        >
+                            <!-- Badge con glassmorphism -->
+                            <div
+                                class="mb-5 inline-block px-5 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase text-white"
+                                style="
+                                    background: rgba(79, 70, 229, 0.4);
+                                    backdrop-filter: blur(14px);
+                                    -webkit-backdrop-filter: blur(14px);
+                                    border: 1px solid rgba(255, 255, 255, 0.22);
+                                "
+                            >
+                                {{ category.category_name }}
+                            </div>
 
-      <button class="prev absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-white p-2 rounded-full shadow-lg"><i class="fas fa-chevron-left"></i></button>
-      <button class="next absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-white p-2 rounded-full shadow-lg"><i class="fas fa-chevron-right"></i></button>
+                            <!-- Título grande y fino -->
+                            <h2
+                                class="text-4xl md:text-6xl font-thin text-white leading-tight tracking-tight mb-3"
+                                style="
+                                    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+                                "
+                            >
+                                {{ category.category_name }}
+                            </h2>
+                            <p
+                                class="text-sm md:text-base font-light mb-8"
+                                style="color: rgba(255, 255, 255, 0.7)"
+                            >
+                                Explora nuestra selección exclusiva
+                            </p>
 
-      <div class="absolute bottom-2 left-0 right-0 flex justify-center space-x-2 z-10">
-        {% for category in categories %}
-          {% if category.cat_image %}
-          <button class="slider-dot w-3 h-3 rounded-full bg-white/70 opacity-50 hover:opacity-100" data-index="{{ forloop.counter0 }}"></button>
-          {% endif %}
-        {% endfor %}
-      </div>
+                            <!-- Botón gradient — selector .category-button intacto para CSS existente -->
+                            <button
+                                class="category-button font-medium py-3 px-8 rounded-xl transition-all duration-300"
+                                style="
+                                    background: linear-gradient(
+                                        135deg,
+                                        #4f46e5,
+                                        #7c3aed
+                                    );
+                                    color: white;
+                                    box-shadow: 0 8px 24px
+                                        rgba(79, 70, 229, 0.4);
+                                "
+                            >
+                                Explorar Categoría &nbsp;→
+                            </button>
+                        </div>
+                    </a>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+            <!-- /.slider-container -->
+
+            <!-- Flecha anterior — selector .prev intacto -->
+            <button
+                class="prev absolute left-4 top-1/2 z-30 flex items-center justify-center rounded-full text-white transition-all duration-200 hover:scale-110"
+                style="
+                    transform: translateY(-50%);
+                    width: 44px;
+                    height: 44px;
+                    background: rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid rgba(255, 255, 255, 0.25);
+                "
+            >
+                <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+
+            <!-- Flecha siguiente — selector .next intacto -->
+            <button
+                class="next absolute right-4 top-1/2 z-30 flex items-center justify-center rounded-full text-white transition-all duration-200 hover:scale-110"
+                style="
+                    transform: translateY(-50%);
+                    width: 44px;
+                    height: 44px;
+                    background: rgba(255, 255, 255, 0.15);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid rgba(255, 255, 255, 0.25);
+                "
+            >
+                <i class="fas fa-chevron-right text-sm"></i>
+            </button>
+
+            <!-- Dots — selector .slider-dot intacto -->
+            <div
+                class="absolute bottom-5 left-0 right-0 flex justify-center z-10"
+                style="gap: 8px"
+            >
+                {% for category in categories %} {% if category.cat_image %}
+                <button
+                    class="slider-dot rounded-full transition-all duration-300"
+                    style="
+                        width: 8px;
+                        height: 8px;
+                        background: rgba(255, 255, 255, 0.4);
+                    "
+                    data-index="{{ forloop.counter0 }}"
+                ></button>
+                {% endif %} {% endfor %}
+            </div>
+        </div>
+        <!-- /.relative wrapper -->
     </div>
-  </div>
 </section>
-<!-- ========================= SECTION MAIN END// ========================= -->
+<!-- ========================= HERO SLIDER END ========================= -->
 
-<!-- ========================= SECTION  ========================= -->
-<section class="py-4">
-  <div class="container mx-auto">
-    <header class="flex justify-between items-center mb-4">
-      <a href="{% url 'store' %}"
-         class="px-4 py-2 border border-primary text-primary hover:bg-blue-600 transition-colors duration-300 rounded-md font-medium hover:border-blue-600 hover:text-white">
-        Ver Todo
-      </a>
-      <h3 class="text-xl font-semibold">Productos populares</h3>
-    </header>
+<!-- ========================= PRODUCTOS POPULARES ========================= -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Encabezado centrado con línea decorativa -->
+        <div class="text-center mb-10">
+            <p
+                class="text-indigo-600 text-xs font-semibold tracking-widest uppercase mb-3"
+            >
+                Selección Destacada
+            </p>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-5">
+                Productos Populares
+            </h2>
+            <!-- Línea decorativa -->
+            <div class="flex items-center justify-center" style="gap: 12px">
+                <div
+                    class="h-px w-16"
+                    style="
+                        background: linear-gradient(
+                            to right,
+                            transparent,
+                            #818cf8
+                        );
+                    "
+                ></div>
+                <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+                <div
+                    class="h-px w-16"
+                    style="
+                        background: linear-gradient(
+                            to left,
+                            transparent,
+                            #818cf8
+                        );
+                    "
+                ></div>
+            </div>
+        </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Enlace "Ver Todo" alineado a la derecha -->
+        <div class="flex justify-end mb-6">
+            <a
+                href="{% url 'store' %}"
+                class="inline-flex items-center font-medium text-sm text-indigo-600 rounded-xl transition-all duration-300 hover:text-white"
+                style="gap: 6px; padding: 10px 20px; border: 1px solid #c7d2fe"
+                onmouseover="
+                    this.style.background =
+                        'linear-gradient(135deg,#4f46e5,#7c3aed)';
+                    this.style.borderColor = 'transparent';
+                "
+                onmouseout="
+                    this.style.background = '';
+                    this.style.borderColor = '#c7d2fe';
+                "
+            >
+                Ver Todo &nbsp;<i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
 
-      {% for product in products %}
-      <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <a href="{{product.get_url}}" class="block overflow-hidden">
-          <img src="{{product.images.url}}" class="w-full h-48 object-cover">
+        <!-- Grid de productos -->
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
+            {% for product in products %}
+            <div
+                class="group bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                style="
+                    border: 1px solid #f1f5f9;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+                "
+                onmouseover="
+                    this.style.boxShadow = '0 20px 40px rgba(79,70,229,0.12)'
+                "
+                onmouseout="this.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'"
+            >
+                <!-- Imagen con zoom al hover + overlay de acción -->
+                <div
+                    class="relative overflow-hidden bg-gray-50"
+                    style="height: 210px"
+                >
+                    <a href="{{ product.get_url }}" class="block w-full h-full">
+                        <img
+                            src="{{ product.images.url }}"
+                            alt="{{ product.product_name }}"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                    </a>
+                    <!-- Overlay con botón al hover -->
+                    <div
+                        class="absolute inset-0 flex items-end justify-center pb-4 transition-opacity duration-300"
+                        style="
+                            background: linear-gradient(
+                                to top,
+                                rgba(49, 46, 129, 0.72) 0%,
+                                transparent 60%
+                            );
+                            opacity: 0;
+                        "
+                        onmouseover="this.style.opacity = '1'"
+                        onmouseout="this.style.opacity = '0'"
+                    >
+                        <a
+                            href="{{ product.get_url }}"
+                            class="bg-white font-semibold text-sm rounded-xl transition-colors duration-200 hover:bg-indigo-50"
+                            style="
+                                color: #4338ca;
+                                padding: 8px 20px;
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                            "
+                        >
+                            Ver Producto
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cuerpo de la card -->
+                <div class="p-4">
+                    <a
+                        href="{{ product.get_url }}"
+                        class="block font-semibold text-sm text-gray-800 mb-1 leading-snug transition-colors duration-200 hover:text-indigo-600"
+                        style="
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
+                        "
+                    >
+                        {{ product.product_name }}
+                    </a>
+
+                    {% if product.price %}
+                    <p class="font-bold text-base mb-2" style="color: #4f46e5">
+                        {{ product.price }}
+                    </p>
+                    {% endif %}
+
+                    <!-- Estrellas limpias -->
+                    <div
+                        class="flex items-center"
+                        style="gap: 2px; color: #f59e0b; font-size: 11px"
+                    >
+                        <i
+                            class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}"
+                            aria-hidden="true"
+                        ></i>
+                        <i
+                            class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}"
+                            aria-hidden="true"
+                        ></i>
+                        <i
+                            class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}"
+                            aria-hidden="true"
+                        ></i>
+                        <i
+                            class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}"
+                            aria-hidden="true"
+                        ></i>
+                        <i
+                            class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}"
+                            aria-hidden="true"
+                        ></i>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- /.grid -->
+    </div>
+</section>
+<!-- ========================= PRODUCTOS POPULARES END ========================= -->
+
+<!-- ========================= CTA BAND ========================= -->
+<section
+    class="relative overflow-hidden py-24"
+    style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)"
+>
+    <!-- Burbujas decorativas de fondo -->
+    <div
+        class="absolute rounded-full pointer-events-none"
+        style="
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 255, 255, 0.06);
+            top: -80px;
+            left: -80px;
+        "
+    ></div>
+    <div
+        class="absolute rounded-full pointer-events-none"
+        style="
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            bottom: -160px;
+            right: -120px;
+        "
+    ></div>
+    <div
+        class="absolute rounded-full pointer-events-none"
+        style="
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.07);
+            top: 40px;
+            right: 20%;
+        "
+    ></div>
+
+    <div class="container mx-auto px-4 relative z-10 text-center">
+        <p
+            class="text-xs font-semibold tracking-widest uppercase mb-3"
+            style="color: rgba(199, 210, 254, 0.9)"
+        >
+            Explora más
+        </p>
+        <h2
+            class="text-3xl md:text-5xl font-bold text-white leading-tight mb-4"
+        >
+            Descubre toda nuestra colección
+        </h2>
+        <p
+            class="text-base md:text-lg font-light mb-10 mx-auto"
+            style="color: rgba(224, 231, 255, 0.8); max-width: 520px"
+        >
+            Encuentra exactamente lo que buscas entre cientos de productos
+            cuidadosamente seleccionados.
+        </p>
+        <a
+            href="{% url 'store' %}"
+            class="inline-flex items-center font-semibold rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-indigo-50"
+            style="
+                gap: 8px;
+                background: white;
+                color: #4338ca;
+                padding: 16px 36px;
+                box-shadow: 0 12px 32px rgba(49, 46, 129, 0.25);
+            "
+            onmouseover="
+                this.style.boxShadow = '0 20px 40px rgba(49,46,129,0.35)'
+            "
+            onmouseout="
+                this.style.boxShadow = '0 12px 32px rgba(49,46,129,0.25)'
+            "
+        >
+            Ver Colección Completa &nbsp;<i
+                class="fas fa-arrow-right text-sm"
+            ></i>
         </a>
-        <figcaption class="p-4">
-          <a href="{{product.get_url}}" class="block text-lg font-semibold mb-2 hover:text-primary">{{product.product_name}}</a>
-          <div class="text-gray-500 mb-2">{{product.price}}</div>
-
-          <div class="flex space-x-1 text-yellow-500">
-            <span>
-              <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
-              <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-            </span>
-          </div>
-
-        </figcaption>
-      </div>
-      {% endfor %}
-
-    </div> <!-- grid.// -->
-
-  </div><!-- container // -->
+    </div>
 </section>
-<!-- ========================= SECTION  END// ========================= -->
+<!-- ========================= CTA BAND END ========================= -->
+
 <style>
-  .slider-container {
-    display: flex;
-    width: 100%;
-    height: 250px;
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .slide {
-    flex: 0 0 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  @media (min-width: 768px) {
+    /* ── Slider ─────────────────────────────────── */
     .slider-container {
-      height: 300px;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
     }
-  }
 
-  @media (min-width: 1024px) {
-    .slider-container {
-      height: 350px;
+    .slide {
+        flex: 0 0 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-  }
 
-  .slider-btn {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.8;
-    transition: all 0.3s ease;
-  }
+    /* Dot activo: blanco sólido y un poco más ancho */
+    .slider-dot.active {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        width: 22px !important;
+    }
 
-  .slider-dot.active {
-    background-color: white;
-  }
+    /* Botón de categoría dentro del slide */
+    .category-button {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
 
-.category-button {
-  display: block !important;
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(30, 64, 175, 0.9);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 50 !important;
-}
+    .category-button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
 
+    /* ── Card overlay hover (fallback sin JS para motion-friendly) ── */
+    @media (hover: hover) {
+        .group:hover .group-hover\:scale-105 {
+            transform: scale(1.05);
+        }
+    }
+</style>
 
-.category-button:hover {
-  background-color: rgba(30, 64, 175, 1); /* Azul más oscuro al pasar el ratón */
-}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sliderContainer = document.querySelector(".slider-container");
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".slider-dot");
+        const prevBtn = document.querySelector(".prev");
+        const nextBtn = document.querySelector(".next");
+        let currentSlide = 0;
+        const slideCount = slides.length;
+        let startX = 0;
+        let isDragging = false;
 
+        function updateSlider() {
+            sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach(function (dot, index) {
+                dot.classList.toggle("active", index === currentSlide);
+            });
+        }
 
-  .slider-container {
-    @apply relative overflow-hidden w-full;
-  }
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slideCount;
+            updateSlider();
+        }
 
-  .slider-dot.active {
-    @apply bg-white;
-  }
-  </style>
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+            updateSlider();
+        }
 
- <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const sliderContainer = document.querySelector('.slider-container');
-      const slides = document.querySelectorAll('.slide');
-      const dots = document.querySelectorAll('.slider-dot');
-      const prevBtn = document.querySelector('.prev');
-      const nextBtn = document.querySelector('.next');
-      let currentSlide = 0;
-      const slideCount = slides.length;
-      let startX = 0;
-      let isDragging = false;
+        let autoplayInterval = setInterval(nextSlide, 5000);
 
-      function updateSlider() {
-          sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-          dots.forEach((dot, index) => {
-              dot.classList.toggle('active', index === currentSlide);
-          });
-      }
+        function stopAutoplay() {
+            clearInterval(autoplayInterval);
+        }
+        function startAutoplay() {
+            autoplayInterval = setInterval(nextSlide, 5000);
+        }
 
-      function nextSlide() {
-          currentSlide = (currentSlide + 1) % slideCount;
-          updateSlider();
-      }
+        prevBtn.addEventListener("click", function () {
+            prevSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
 
-      function prevSlide() {
-          currentSlide = (currentSlide - 1 + slideCount) % slideCount;
-          updateSlider();
-      }
+        nextBtn.addEventListener("click", function () {
+            nextSlide();
+            stopAutoplay();
+            startAutoplay();
+        });
 
-      let autoplayInterval = setInterval(nextSlide, 5000);
+        dots.forEach(function (dot, index) {
+            dot.addEventListener("click", function () {
+                currentSlide = index;
+                updateSlider();
+                stopAutoplay();
+                startAutoplay();
+            });
+        });
 
-      function stopAutoplay() {
-          clearInterval(autoplayInterval);
-      }
+        /* Swipe táctil en móviles */
+        sliderContainer.addEventListener("touchstart", function (e) {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            stopAutoplay();
+        });
 
-      function startAutoplay() {
-          autoplayInterval = setInterval(nextSlide, 5000);
-      }
+        sliderContainer.addEventListener("touchmove", function (e) {
+            if (!isDragging) return;
+            const moveX = e.touches[0].clientX - startX;
+            if (moveX > 50) {
+                prevSlide();
+                isDragging = false;
+            } else if (moveX < -50) {
+                nextSlide();
+                isDragging = false;
+            }
+        });
 
-      prevBtn.addEventListener('click', () => {
-          prevSlide();
-          stopAutoplay();
-          startAutoplay();
-      });
+        sliderContainer.addEventListener("touchend", function () {
+            isDragging = false;
+            startAutoplay();
+        });
 
-      nextBtn.addEventListener('click', () => {
-          nextSlide();
-          stopAutoplay();
-          startAutoplay();
-      });
+        /* Hover overlay en product cards — manejo via JS para compatibilidad cross-browser */
+        document.querySelectorAll(".group").forEach(function (card) {
+            const overlay = card.querySelector('[style*="opacity: 0"]');
+            if (!overlay) return;
+            card.addEventListener("mouseenter", function () {
+                overlay.style.opacity = "1";
+            });
+            card.addEventListener("mouseleave", function () {
+                overlay.style.opacity = "0";
+            });
+        });
 
-      dots.forEach((dot, index) => {
-          dot.addEventListener('click', () => {
-              currentSlide = index;
-              updateSlider();
-              stopAutoplay();
-              startAutoplay();
-          });
-      });
-
-      // Soporte para deslizar con el dedo en móviles
-      sliderContainer.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].clientX;
-          isDragging = true;
-          stopAutoplay();
-      });
-
-      sliderContainer.addEventListener('touchmove', (e) => {
-          if (!isDragging) return;
-          let moveX = e.touches[0].clientX - startX;
-          if (moveX > 50) {
-              prevSlide();
-              isDragging = false;
-          } else if (moveX < -50) {
-              nextSlide();
-              isDragging = false;
-          }
-      });
-
-      sliderContainer.addEventListener('touchend', () => {
-          isDragging = false;
-          startAutoplay();
-      });
-
-      updateSlider();
-  });
+        updateSlider();
+    });
 </script>
 {% endblock %}

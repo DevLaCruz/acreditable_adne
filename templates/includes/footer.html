@@ -1,22 +1,131 @@
 <!-- ========================= FOOTER ========================= -->
-<footer class="border-t py-4">
-	<div class="container mx-auto">
-	  <section class="flex flex-wrap items-center justify-between border-t pt-4">
-		<div class="w-full md:w-1/6 text-center md:text-left mb-2 md:mb-0">
-		  <p class="text-gray-600"> &copy; Axtosys </p>
-		</div>
-		<div class="w-full md:w-2/3 text-center">
-		  <span class="px-2 text-gray-600">devlacruz@axtosys.com</span>
-		  {% comment %} <span class="px-2 text-gray-600">+1980-986-7233</span>
-		  <span class="px-2 text-gray-600">698 Park ST, US</span> {% endcomment %}
-		</div>
-		<div class="w-full md:w-1/6 text-center md:text-right text-gray-600">
-		  <i class="fab fa-lg fa-cc-visa mx-1"></i>
-		  <i class="fab fa-lg fa-cc-paypal mx-1"></i>
-		  <i class="fab fa-lg fa-cc-mastercard mx-1"></i>
-		</div>
-	  </section>
-	</div><!-- //container -->
-  </footer>
-  <!-- ========================= FOOTER END // ========================= -->
-  
+<footer style="background-color: #0f172a">
+    <!-- Separador superior sutil -->
+    <div style="border-top: 1px solid #1e293b"></div>
+
+    <!-- Cuerpo principal del footer -->
+    <div class="container mx-auto px-6 py-12">
+        <div class="flex flex-col items-center text-center" style="gap: 32px">
+            <!-- Marca -->
+            <div>
+                <h2
+                    class="text-xl font-bold text-white tracking-tight"
+                    style="letter-spacing: -0.02em"
+                >
+                    Negocios Suárez
+                </h2>
+                <p class="text-xs mt-1" style="color: #64748b">
+                    Tu tienda de confianza
+                </p>
+            </div>
+
+            <!-- Separador decorativo -->
+            <div style="width: 48px; border-top: 1px solid #334155"></div>
+
+            <!-- Contacto centrado -->
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center"
+                style="gap: 20px"
+            >
+                <a
+                    href="mailto:devlacruz@axtosys.com"
+                    class="flex items-center transition-colors duration-200"
+                    style="gap: 8px; color: #94a3b8; font-size: 14px"
+                    onmouseover="this.style.color = '#818cf8'"
+                    onmouseout="this.style.color = '#94a3b8'"
+                >
+                    <i
+                        class="fas fa-envelope text-xs"
+                        style="color: #6366f1"
+                    ></i>
+                    devlacruz@axtosys.com
+                </a>
+                {% comment %}
+                <span
+                    style="color: #334155; font-size: 12px; display: none"
+                    class="sm:block"
+                    >|</span
+                >
+                <a
+                    href="tel:+19809867233"
+                    class="flex items-center transition-colors duration-200"
+                    style="gap: 8px; color: #94a3b8; font-size: 14px"
+                    onmouseover="this.style.color = '#818cf8'"
+                    onmouseout="this.style.color = '#94a3b8'"
+                >
+                    <i class="fas fa-phone text-xs" style="color: #6366f1"></i>
+                    +1980-986-7233
+                </a>
+                <span
+                    style="color: #334155; font-size: 12px; display: none"
+                    class="sm:block"
+                    >|</span
+                >
+                <span
+                    class="flex items-center"
+                    style="gap: 8px; color: #64748b; font-size: 14px"
+                >
+                    <i
+                        class="fas fa-map-marker-alt text-xs"
+                        style="color: #6366f1"
+                    ></i>
+                    698 Park ST, US
+                </span>
+                {% endcomment %}
+            </div>
+
+            <!-- Separador de ancho completo -->
+            <div class="w-full" style="border-top: 1px solid #1e293b"></div>
+
+            <!-- Fila inferior: copyright + métodos de pago -->
+            <div
+                class="w-full flex flex-col sm:flex-row items-center justify-between"
+                style="gap: 16px"
+            >
+                <!-- Copyright -->
+                <p style="color: #475569; font-size: 12px">
+                    &copy; 2025 Axtosys. Todos los derechos reservados.
+                </p>
+
+                <!-- Iconos de pago -->
+                <div
+                    class="flex items-center"
+                    style="gap: 12px; color: #475569"
+                >
+                    <span
+                        style="
+                            color: #334155;
+                            font-size: 11px;
+                            letter-spacing: 0.05em;
+                            text-transform: uppercase;
+                        "
+                    >
+                        Pagos seguros
+                    </span>
+                    <div
+                        style="width: 1px; height: 14px; background: #334155"
+                    ></div>
+                    <i
+                        class="fab fa-lg fa-cc-visa transition-colors duration-200"
+                        style="cursor: default"
+                        onmouseover="this.style.color = '#cbd5e1'"
+                        onmouseout="this.style.color = '#475569'"
+                    ></i>
+                    <i
+                        class="fab fa-lg fa-cc-paypal transition-colors duration-200"
+                        style="cursor: default"
+                        onmouseover="this.style.color = '#cbd5e1'"
+                        onmouseout="this.style.color = '#475569'"
+                    ></i>
+                    <i
+                        class="fab fa-lg fa-cc-mastercard transition-colors duration-200"
+                        style="cursor: default"
+                        onmouseover="this.style.color = '#cbd5e1'"
+                        onmouseout="this.style.color = '#475569'"
+                    ></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- ========================= FOOTER END // ========================= -->

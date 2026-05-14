@@ -109,7 +109,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # Soporta tanto Docker (PostgreSQL) como desarrollo local (SQLite)
-if config('DB_ENGINE', default='sqlite3') == 'postgresql':
+if config('DB_ENGINE', default='sqlite3') in ['postgresql', 'django.db.backends.postgresql']:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

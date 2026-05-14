@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,7 +44,9 @@ services:
     volumes:
       - .:/app
       - static_volume:/app/static
-      - media_volume:/app/media
+      # media usa bind mount directo: el volumen nombrado shadowingía
+      # el directorio ./media/ del host dejando /app/media vacío
+      - ./media:/app/media
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
@@ -57,7 +59,6 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  media_volume:
 
 networks:
   suarez_network:

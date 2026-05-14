@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block content %}
 <!-- ========================= SECTION PAGETOP ========================= -->
@@ -24,11 +24,31 @@
             </header>
             <div class="pt-4">
               <ul>
-                <li><a href="{% url 'store' %}" class="text-gray-700 hover:underline">Todos</a></li>
-                {% for category in links %}
-                <li><a href="{{ category.get_url }}" class="text-gray-700 hover:underline">{{ category.category_name }}</a></li>
-                {% endfor %}
-              </ul>
+                    <li>
+                      <a href="{% url 'store' %}"
+                         class="text-gray-700 hover:underline"
+                         hx-get="{% url 'store' %}"
+                         hx-target="#product-list"
+                         hx-swap="innerHTML"
+                         hx-push-url="true"
+                         hx-indicator="#product-spinner">
+                        Todos
+                      </a>
+                    </li>
+                    {% for category in links %}
+                    <li>
+                      <a href="{{ category.get_url }}"
+                         class="text-gray-700 hover:underline"
+                         hx-get="{{ category.get_url }}"
+                         hx-target="#product-list"
+                         hx-swap="innerHTML"
+                         hx-push-url="true"
+                         hx-indicator="#product-spinner">
+                        {{ category.category_name }}
+                      </a>
+                    </li>
+                    {% endfor %}
+                  </ul>
             </div>
           </article>
 
@@ -102,36 +122,57 @@
       </aside>
 
       <main class="w-full md:w-4/5 px-4">
-        <header class="border-b pb-3 mb-4">
-          <span class="text-gray-700"><b>{{ product_count }}</b> Items Encontrados</span>
-        </header>
+        <!-- Indicador de carga para filtros HTMX -->
+        <div id="product-spinner"
+             class="htmx-indicator flex justify-center py-8">
+          <svg class="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div id="product-list">
+          <header class="border-b pb-3 mb-4">
+            <span class="text-gray-700"><b>{{ product_count }}</b> Items Encontrados</span>
+          </header>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {% if products %}
             {% for product in products %}
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="{{ product.images.url }}" alt="{{ product.product_name }}" class="w-full h-48 object-cover">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
+              <a href="{{ product.get_url }}">
+                <img src="{{ product.images.url }}" alt="{{ product.product_name }}" class="w-full h-48 object-cover">
+              </a>
               <figcaption class="p-4">
                 <h3 class="text-lg font-semibold">
                   <a href="{{ product.get_url }}" class="hover:underline">{{ product.product_name }}</a>
                 </h3>
                 {% comment %} <div class="mt-2 text-green-600">${{ product.price }}</div> {% endcomment %}
-                <a href="{% url 'add_cart' product.id %}" class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded">Agregar al Carrito</a>
+                <a href="{% url 'add_cart' product.id %}" class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded hover:bg-green-600 transition-colors">Agregar al Carrito</a>
               </figcaption>
             </div>
             {% endfor %}
           {% else %}
-          <div>
-            <h2>No se encontraron resultados</h2>
+          <div class="col-span-3 text-center py-12">
+            <i class="fa fa-search text-4xl text-gray-300 mb-3"></i>
+            <h2 class="text-gray-500">No se encontraron resultados</h2>
           </div>
           {% endif %}
-        </div>
+          </div>
 
-        <nav class="mt-8" aria-label="Page navigation sample">
+          <nav class="mt-8" aria-label="Page navigation sample">
           {% if products.has_other_pages %}
           <ul class="flex justify-center space-x-1">
             {% if products.has_previous %}
-            <li><a href="?page={{ products.previous_page_number }}" class="px-3 py-1 bg-blue-500 text-white rounded">Anterior</a></li>
+            <li>
+              <a href="?page={{ products.previous_page_number }}"
+                 class="px-3 py-1 bg-blue-500 text-white rounded"
+                 hx-get="?page={{ products.previous_page_number }}"
+                 hx-target="#product-list"
+                 hx-swap="innerHTML"
+                 hx-push-url="true"
+                 hx-indicator="#product-spinner">Anterior</a>
+            </li>
             {% else %}
             <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Anterior</span></li>
             {% endif %}
@@ -140,18 +181,34 @@
               {% if products.number == i %}
             <li><span class="px-3 py-1 bg-blue-600 text-white rounded">{{ i }}</span></li>
               {% else %}
-            <li><a href="?page={{ i }}" class="px-3 py-1 bg-blue-500 text-white rounded">{{ i }}</a></li>
+            <li>
+              <a href="?page={{ i }}"
+                 class="px-3 py-1 bg-blue-500 text-white rounded"
+                 hx-get="?page={{ i }}"
+                 hx-target="#product-list"
+                 hx-swap="innerHTML"
+                 hx-push-url="true"
+                 hx-indicator="#product-spinner">{{ i }}</a>
+            </li>
               {% endif %}
             {% endfor %}
 
             {% if products.has_next %}
-            <li><a href="?page={{ products.next_page_number }}" class="px-3 py-1 bg-blue-500 text-white rounded">Siguiente</a></li>
+            <li>
+              <a href="?page={{ products.next_page_number }}"
+                 class="px-3 py-1 bg-blue-500 text-white rounded"
+                 hx-get="?page={{ products.next_page_number }}"
+                 hx-target="#product-list"
+                 hx-swap="innerHTML"
+                 hx-push-url="true"
+                 hx-indicator="#product-spinner">Siguiente</a>
+            </li>
             {% else %}
             <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>
             {% endif %}
           </ul>
           {% endif %}
-        </nav>
+          </nav>
       </main>
     </div>
   </div>

@@ -1,0 +1,85 @@
+{% load static %}
+{# Parcial devuelto por HTMX al paginar o filtrar por categoría.            #}
+{# Se inyecta dentro de <div id="product-list"> en store.html               #}
+
+<header class="border-b pb-3 mb-4">
+  <span class="text-gray-700"><b>{{ product_count }}</b> Items Encontrados</span>
+</header>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {% if products %}
+    {% for product in products %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
+      <a href="{{ product.get_url }}">
+        <img src="{{ product.images.url }}"
+             alt="{{ product.product_name }}"
+             class="w-full h-48 object-cover">
+      </a>
+      <figcaption class="p-4">
+        <h3 class="text-lg font-semibold">
+          <a href="{{ product.get_url }}" class="hover:underline">{{ product.product_name }}</a>
+        </h3>
+        <a href="{% url 'add_cart' product.id %}"
+           class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded hover:bg-green-600 transition-colors">
+          Agregar al Carrito
+        </a>
+      </figcaption>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="col-span-3 text-center py-12">
+    <i class="fa fa-search text-4xl text-gray-300 mb-3"></i>
+    <h2 class="text-gray-500">No se encontraron resultados</h2>
+  </div>
+  {% endif %}
+</div>
+
+<nav class="mt-8" aria-label="Paginación">
+  {% if products.has_other_pages %}
+  <ul class="flex justify-center space-x-1">
+    {% if products.has_previous %}
+    <li>
+      <a href="?page={{ products.previous_page_number }}"
+         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+         hx-get="?page={{ products.previous_page_number }}"
+         hx-target="#product-list"
+         hx-swap="innerHTML"
+         hx-push-url="true"
+         hx-indicator="#product-spinner">Anterior</a>
+    </li>
+    {% else %}
+    <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Anterior</span></li>
+    {% endif %}
+
+    {% for i in products.paginator.page_range %}
+      {% if products.number == i %}
+    <li><span class="px-3 py-1 bg-blue-600 text-white rounded">{{ i }}</span></li>
+      {% else %}
+    <li>
+      <a href="?page={{ i }}"
+         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+         hx-get="?page={{ i }}"
+         hx-target="#product-list"
+         hx-swap="innerHTML"
+         hx-push-url="true"
+         hx-indicator="#product-spinner">{{ i }}</a>
+    </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if products.has_next %}
+    <li>
+      <a href="?page={{ products.next_page_number }}"
+         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+         hx-get="?page={{ products.next_page_number }}"
+         hx-target="#product-list"
+         hx-swap="innerHTML"
+         hx-push-url="true"
+         hx-indicator="#product-spinner">Siguiente</a>
+    </li>
+    {% else %}
+    <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</nav>

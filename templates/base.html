@@ -1,199 +1,280 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="cache-control" content="max-age=604800" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="cache-control" content="max-age=604800" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
 
-    <title>Negocios Suárez</title>
+        <title>Negocios Suárez</title>
 
-    <link
-      href="{% static 'images/favicon.ico' %}"
-      rel="shortcut icon"
-      type="image/x-icon"
-    />
-    <script src="//unpkg.com/alpinejs" defer></script>
+        <link
+            href="{% static 'images/favicon.ico' %}"
+            rel="shortcut icon"
+            type="image/x-icon"
+        />
+        <script src="//unpkg.com/alpinejs" defer></script>
+        <!-- HTMX: navegación SPA-like sin recargas completas -->
+        <script
+            src="https://unpkg.com/htmx.org@1.9.12"
+            integrity="sha384-SKcMNZ2xRK4FEtQH//HEq5VJo7liZK+AOOPMjMLxuWMHWVvbO0z5gNBxYhBY97B"
+            crossorigin="anonymous"
+        ></script>
 
+        <!-- jQuery -->
+        <script
+            src="{% static 'js/jquery-2.0.0.min.js' %}"
+            type="text/javascript"
+        ></script>
 
-    <!-- jQuery -->
-    <script
-      src="{% static 'js/jquery-2.0.0.min.js' %}"
-      type="text/javascript"
-    ></script>
+        <!-- Bootstrap4 files-->
+        <script
+            src="{% static 'js/bootstrap.bundle.min.js' %}"
+            type="text/javascript"
+        ></script>
+        {% comment %}
+        <link
+            href="{% static 'css/bootstrap.css' %}"
+            rel="stylesheet"
+            type="text/css"
+        />
+        {% endcomment %}
+        <link
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css"
+            rel="stylesheet"
+        />
 
-    <!-- Bootstrap4 files-->
-    <script
-      src="{% static 'js/bootstrap.bundle.min.js' %}"
-      type="text/javascript"
-    ></script>
- {% comment %} <link
-      href="{% static 'css/bootstrap.css' %}"
-      rel="stylesheet"
-      type="text/css"
-    />  {% endcomment %}
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+        <!-- Font awesome 5 -->
+        <link
+            href="{% static 'fonts/fontawesome/css/all.min.css' %}"
+            type="text/css"
+            rel="stylesheet"
+        />
 
-    <!-- Font awesome 5 -->
-    <link
-      href="{% static 'fonts/fontawesome/css/all.min.css' %}"
-      type="text/css"
-      rel="stylesheet"
-    />
+        <!-- custom style -->
+        <link
+            href="{% static 'css/ui.css' %}"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            href="{% static 'css/responsive.css' %}"
+            rel="stylesheet"
+            media="only screen and (max-width: 1200px)"
+        />
+        <link
+            href="{% static 'css/custom.css' %}"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
 
-    <!-- custom style -->
-    <link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css" />
-    <link
-      href="{% static 'css/responsive.css' %}"
-      rel="stylesheet"
-      media="only screen and (max-width: 1200px)"
-    />
-    <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- custom javascript -->
+        <script
+            src="{% static 'js/script.js' %}"
+            type="text/javascript"
+        ></script>
+        <!-- <script src="https://www.paypal.com/sdk/js?client-id=AR4jlv1Mfa2jm8J5hlw1Z748D0qqA7ozsq13YTpSrNZnHFrmYkXowCG2FZzpkUrbaZ-3aY8_dddIAf89&currency=USD"></script> -->
+        <script type="text/javascript">
+            // jquery ready start
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $("#message").fadeOut("slow");
+                }, 4000);
+            });
+            // jquery end
 
-    <!-- custom javascript -->
-    <script src="{% static 'js/script.js' %}" type="text/javascript"></script>
-     <!-- <script src="https://www.paypal.com/sdk/js?client-id=AR4jlv1Mfa2jm8J5hlw1Z748D0qqA7ozsq13YTpSrNZnHFrmYkXowCG2FZzpkUrbaZ-3aY8_dddIAf89&currency=USD"></script> -->
-    <script type="text/javascript">
-    <script type="text/javascript">
-      /// some script
+            // Barra de progreso global para peticiones HTMX
+            document.addEventListener("htmx:beforeRequest", function () {
+                document.getElementById("htmx-progress").style.width = "0%";
+                document.getElementById("htmx-progress").style.display =
+                    "block";
+                document.getElementById("htmx-progress").style.opacity = "1";
+                let w = 0;
+                window._htmxProgressTimer = setInterval(function () {
+                    w = Math.min(w + Math.random() * 15, 85);
+                    document.getElementById("htmx-progress").style.width =
+                        w + "%";
+                }, 200);
+            });
+            document.addEventListener("htmx:afterRequest", function () {
+                clearInterval(window._htmxProgressTimer);
+                document.getElementById("htmx-progress").style.width = "100%";
+                setTimeout(function () {
+                    document.getElementById("htmx-progress").style.opacity =
+                        "0";
+                    setTimeout(function () {
+                        document.getElementById("htmx-progress").style.display =
+                            "none";
+                    }, 300);
+                }, 150);
+            });
 
-      // jquery ready start
-      $(document).ready(function () {
+            // Re-inicializar Alpine en swaps parciales de HTMX
+            document.addEventListener("htmx:afterSwap", function (e) {
+                if (window.Alpine) Alpine.initTree(e.detail.elt);
+            });
+        </script>
 
-        setTimeout(function() {
-          $('#message').fadeOut('slow')
-      }, 4000)
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const mainImg = document.getElementById("mainImg");
+                const galleryLinks = document.querySelectorAll(".gallery-link");
 
-      });
-      // jquery end
-    </script>
+                galleryLinks.forEach((link) => {
+                    link.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const imageUrl = this.getAttribute("data-image");
+                        mainImg.src = imageUrl;
+                    });
+                });
+            });
+        </script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const mainImg = document.getElementById('mainImg');
-          const galleryLinks = document.querySelectorAll('.gallery-link');
+        <style>
+            .image-zoom-container {
+                position: relative;
+                width: 100%;
+                cursor: zoom-in;
+            }
 
-          galleryLinks.forEach(link => {
-              link.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  const imageUrl = this.getAttribute('data-image');
-                  mainImg.src = imageUrl;
-              });
-          });
-      });
-      </script>
+            .zoom-lens {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                border: 2px solid #fff;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+                background-repeat: no-repeat;
+                display: none;
+                pointer-events: none;
+                border-radius: 50%;
+            }
 
+            .zoom-result {
+                position: absolute;
+                top: 0;
+                left: 105%;
+                width: 400px;
+                height: 400px;
+                border: 1px solid #ddd;
+                background-repeat: no-repeat;
+                display: none;
+                overflow: hidden;
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                z-index: 50;
+            }
 
-      <style>
-        .image-zoom-container {
-          position: relative;
-          width: 100%;
-          cursor: zoom-in;
-        }
-
-        .zoom-lens {
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          border: 2px solid #fff;
-          box-shadow: 0 0 5px rgba(0,0,0,0.5);
-          background-repeat: no-repeat;
-          display: none;
-          pointer-events: none;
-          border-radius: 50%;
-        }
-
-        .zoom-result {
-          position: absolute;
-          top: 0;
-          left: 105%;
-          width: 400px;
-          height: 400px;
-          border: 1px solid #ddd;
-          background-repeat: no-repeat;
-          display: none;
-          overflow: hidden;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-          z-index: 50;
-        }
-
-        @media (max-width: 768px) {
-          .zoom-result {
-            display: none !important;
-          }
-        }
+            @media (max-width: 768px) {
+                .zoom-result {
+                    display: none !important;
+                }
+            }
         </style>
 
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const container = document.querySelector('.image-zoom-container');
-            const mainImg = document.getElementById('mainImg');
-            const lens = document.querySelector('.zoom-lens');
-            const result = document.querySelector('.zoom-result');
-            const galleryLinks = document.querySelectorAll('.gallery-link');
+            document.addEventListener("DOMContentLoaded", function () {
+                const container = document.querySelector(
+                    ".image-zoom-container",
+                );
+                const mainImg = document.getElementById("mainImg");
+                const lens = document.querySelector(".zoom-lens");
+                const result = document.querySelector(".zoom-result");
+                const galleryLinks = document.querySelectorAll(".gallery-link");
 
-            let zoomLevel = 2.5;
+                let zoomLevel = 2.5;
 
-            function updateZoom(e) {
-                const rect = container.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                function updateZoom(e) {
+                    const rect = container.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
 
-                // Lens position
-                let lensX = x - lens.offsetWidth / 2;
-                let lensY = y - lens.offsetHeight / 2;
+                    // Lens position
+                    let lensX = x - lens.offsetWidth / 2;
+                    let lensY = y - lens.offsetHeight / 2;
 
-                // Boundaries
-                lensX = Math.max(0, Math.min(lensX, container.offsetWidth - lens.offsetWidth));
-                lensY = Math.max(0, Math.min(lensY, container.offsetHeight - lens.offsetHeight));
+                    // Boundaries
+                    lensX = Math.max(
+                        0,
+                        Math.min(
+                            lensX,
+                            container.offsetWidth - lens.offsetWidth,
+                        ),
+                    );
+                    lensY = Math.max(
+                        0,
+                        Math.min(
+                            lensY,
+                            container.offsetHeight - lens.offsetHeight,
+                        ),
+                    );
 
-                lens.style.left = lensX + 'px';
-                lens.style.top = lensY + 'px';
+                    lens.style.left = lensX + "px";
+                    lens.style.top = lensY + "px";
 
-                // Result image
-                const ratio = zoomLevel;
-                result.style.backgroundImage = `url(${mainImg.src})`;
-                result.style.backgroundSize = (container.offsetWidth * ratio) + 'px ' +
-                                            (container.offsetHeight * ratio) + 'px';
-                result.style.backgroundPosition = `-${lensX * ratio}px -${lensY * ratio}px`;
-            }
+                    // Result image
+                    const ratio = zoomLevel;
+                    result.style.backgroundImage = `url(${mainImg.src})`;
+                    result.style.backgroundSize =
+                        container.offsetWidth * ratio +
+                        "px " +
+                        container.offsetHeight * ratio +
+                        "px";
+                    result.style.backgroundPosition = `-${lensX * ratio}px -${lensY * ratio}px`;
+                }
 
-            container.addEventListener('mouseenter', function() {
-                lens.style.display = 'block';
-                result.style.display = 'block';
-            });
+                container.addEventListener("mouseenter", function () {
+                    lens.style.display = "block";
+                    result.style.display = "block";
+                });
 
-            container.addEventListener('mouseleave', function() {
-                lens.style.display = 'none';
-                result.style.display = 'none';
-            });
+                container.addEventListener("mouseleave", function () {
+                    lens.style.display = "none";
+                    result.style.display = "none";
+                });
 
-            container.addEventListener('mousemove', updateZoom);
+                container.addEventListener("mousemove", updateZoom);
 
-            // Gallery image switching
-            galleryLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const imageUrl = this.getAttribute('data-image');
-                    mainImg.src = imageUrl;
-                    mainImg.setAttribute('data-zoom-image', imageUrl);
+                // Gallery image switching
+                galleryLinks.forEach((link) => {
+                    link.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        const imageUrl = this.getAttribute("data-image");
+                        mainImg.src = imageUrl;
+                        mainImg.setAttribute("data-zoom-image", imageUrl);
+                    });
                 });
             });
-        });
         </script>
+    </head>
+    <body hx-boost="true">
+        <!-- Barra de progreso HTMX (top de pantalla) -->
+        <div
+            id="htmx-progress"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 3px;
+                background: #3b82f6;
+                z-index: 9999;
+                transition:
+                    width 200ms ease,
+                    opacity 300ms ease;
+                width: 0%;
+            "
+        ></div>
 
-  </head>
-  <body>
-
-    {% include 'includes/navbar.html' %}
-    {%block content%}
-
-    {%endblock%}
-    {% include 'includes/footer.html' %}
+        {% include 'includes/navbar.html' %} {%block content%} {%endblock%} {%
+        include 'includes/footer.html' %}
+    </body>
+</html>
