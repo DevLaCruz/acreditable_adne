@@ -53,19 +53,17 @@ ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     DJANGO_SETTINGS_MODULE=TiendaSuarez.settings
 
-# Crear directorios necesarios
+# Crear directorios necesarios y fijar permisos
 RUN mkdir -p /app/media /app/static && \
     chown -R appuser:appuser /app
 
 # Copiar y hacer ejecutable el script de inicialización
-COPY entrypoint.sh /app/entrypoint.sh
+COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Recopilar archivos estáticos (sin interacción)
-RUN python manage.py collectstatic --noinput --clear 2>/dev/null || true
-
-# Cambiar a usuario no-root
+# Recopilar archivos estáticos como appuser
 USER appuser
+RUN python manage.py collectstatic --noinput --clear 2>/dev/null || true
 
 # Exponer puerto (Gunicorn)
 EXPOSE 8000

@@ -1,86 +1,107 @@
 {% extends 'base.html' %}
-
 {% block content %}
+<!-- ══════════════════════════════════════════════════
+     EDITAR PERFIL (2026 AESTHETIC)
+══════════════════════════════════════════════════ -->
+<div class="min-h-screen bg-[#0B0F19] py-10 px-4 relative overflow-hidden font-sans">
+    
+    <div class="absolute top-[-20%] right-[-15%] w-[40%] h-[40%] rounded-full bg-teal-600/10 blur-[150px] pointer-events-none"></div>
+    <div class="absolute bottom-[-20%] left-[-15%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none"></div>
 
-<!-- ========================= SECTION CONTENT ========================= -->
-<section class="py-10 bg-gray-100">
-    {% include 'includes/alerts.html' %}
+    <div class="container mx-auto relative z-10">
+        <div class="mb-6">
+            {% include 'includes/alerts.html' %}
+        </div>
 
-    <div class="container mx-auto px-4">
         <div class="flex flex-wrap">
             {% include 'includes/dashboard_sidebar.html' %}
 
             <main class="w-full md:w-3/4">
-                <article class="bg-white shadow-md rounded-lg overflow-hidden">
-                    <header class="bg-gray-200 px-6 py-4">
-                        <strong class="inline-block">Editar Perfil de Usuario</strong>
+                <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
+                    <header class="px-8 py-5 border-b border-white/10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-teal-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user-edit text-teal-400 text-sm"></i>
+                            </div>
+                            <strong class="text-gray-200 font-semibold">Editar Perfil de Usuario</strong>
+                        </div>
                     </header>
-                    <div class="p-6">
+                    <div class="p-8">
                         <div class="flex justify-end mb-6">
-                            <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-24 h-24 rounded-full">
+                            {% if userprofile.profile_picture %}
+                            <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-24 h-24 rounded-full ring-2 ring-teal-500/50 object-cover">
+                            {% else %}
+                            <div class="w-24 h-24 bg-teal-500/20 rounded-full flex items-center justify-center ring-2 ring-teal-500/50">
+                                <i class="fas fa-user text-3xl text-teal-400"></i>
+                            </div>
+                            {% endif %}
                         </div>
 
-                        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="space-y-4">
+                        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="space-y-6">
                             {% csrf_token %}
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Nombre</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Nombre</label>
                                     {{ user_form.first_name }}
                                 </div>
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Apellidos</label>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Apellidos</label>
                                     {{ user_form.last_name }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Teléfono</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Teléfono</label>
                                     {{ user_form.phone_number }}
                                 </div>
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Imagen Perfil</label>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Imagen Perfil</label>
                                     {{ profile_form.profile_picture }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Dirección</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Dirección</label>
                                     {{ profile_form.address_line_1 }}
                                 </div>
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Detalles Dirección</label>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Detalles Dirección</label>
                                     {{ profile_form.address_line_2 }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Ciudad</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Ciudad</label>
                                     {{ profile_form.city }}
                                 </div>
-                                <div>
-                                    <label class="block text-gray-700 mb-1">Departamento</label>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Departamento</label>
                                     {{ profile_form.state }}
                                 </div>
-                                <div>
-                                    <label class="block text-gray-700 mb-1">País</label>
+                                <div class="space-y-2">
+                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">País</label>
                                     {{ profile_form.country }}
                                 </div>
                             </div>
 
-                            <div class="text-center">
-                                <input type="submit" value="Guardar" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer">
+                            <div class="text-center pt-4">
+                                <button type="submit" class="relative group overflow-hidden rounded-2xl px-12">
+                                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-teal-500 via-blue-600 to-indigo-600 opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div class="relative py-4 text-white font-bold tracking-wider text-sm flex items-center justify-center gap-3">
+                                        <span>GUARDAR CAMBIOS</span>
+                                        <i class="fas fa-save text-xs group-hover:translate-x-1 transition-transform"></i>
+                                    </div>
+                                </button>
                             </div>
                         </form>
-                    </div> <!-- card-body -->
-                </article> <!-- card -->
+                    </div>
+                </div>
             </main>
-        </div> <!-- row -->
-    </div> <!-- container -->
-</section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
-
+        </div>
+    </div>
+</div>
 {% endblock %}
