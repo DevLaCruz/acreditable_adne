@@ -5,12 +5,14 @@ from .models import Account, UserProfile
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'placeholder': 'Ingrese Password',
-        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+        'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;',
     }))
 
     confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
         'placeholder': 'Confirmar Password',
-        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+        'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;',
     }))
 
     class Meta:
@@ -22,19 +24,23 @@ class RegistrationForm(forms.ModelForm):
         super(RegistrationForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs.update({
             'placeholder': 'Ingrese nombre',
-            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+            'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
         })
         self.fields['last_name'].widget.attrs.update({
             'placeholder': 'Ingrese apellidos',
-            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+            'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
         })
         self.fields['phone_number'].widget.attrs.update({
             'placeholder': 'Ingrese telefono',
-            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+            'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
         })
         self.fields['email'].widget.attrs.update({
             'placeholder': 'Ingrese email',
-            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+            'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+            'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
         })
 
     def clean(self):
@@ -55,7 +61,8 @@ class UserForm(forms.ModelForm):
         super(UserForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({
-                'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+                'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+                'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
             })
 
 
@@ -63,7 +70,8 @@ class UserProfileForm(forms.ModelForm):
     profile_picture = forms.ImageField(required=False, error_messages={
         'invalid': 'Solo archivos de imagen'
     }, widget=forms.FileInput(attrs={
-        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+        'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+        'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
     }))
 
     class Meta:
@@ -75,5 +83,6 @@ class UserProfileForm(forms.ModelForm):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({
-                'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-gray-100 placeholder-gray-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm'
+                'class': 'w-full px-5 py-4 bg-gray-900/50 border border-gray-700/50 rounded-2xl text-white placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 backdrop-blur-sm',
+                'style': 'color: white !important; background-color: rgba(17, 24, 39, 0.5) !important;'
             })
