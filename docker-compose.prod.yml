@@ -47,11 +47,11 @@ services:
       DEBUG: False
       SECRET_KEY: ${SECRET_KEY}
       DB_ENGINE: django.db.backends.postgresql
-      RDS_DB_NAME: ${DB_NAME}
-      RDS_USERNAME: ${DB_USER}
-      RDS_PASSWORD: ${DB_PASSWORD}
-      RDS_HOSTNAME: db
-      RDS_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: 5432
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       EMAIL_BACKEND: ${EMAIL_BACKEND}
       EMAIL_HOST: ${EMAIL_HOST}
