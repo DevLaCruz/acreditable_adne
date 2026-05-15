@@ -61,8 +61,8 @@ services:
       EMAIL_USE_TLS: ${EMAIL_USE_TLS}
       REDIS_URL: redis://redis:6379/0
     volumes:
-      - static_volume_prod:/app/static
-      - media_volume_prod:/app/media
+      - ./static:/app/static
+      - ./media:/app/media
       - /app/__pycache__
     ports:
       # Solo accesible desde localhost (Nginx del host proxea aquí)
