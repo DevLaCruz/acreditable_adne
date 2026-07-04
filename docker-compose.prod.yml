@@ -5,6 +5,8 @@ services:
   db:
     image: postgres:16-alpine
     container_name: suarez_db_prod
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
