@@ -79,8 +79,8 @@ services:
 volumes:
   postgres_data_prod:
     driver: local
-  redis_data_prod:
-    driver: local
+  # redis_data_prod:
+  #   driver: local
   static_volume_prod:
     driver: local
   media_volume_prod:
