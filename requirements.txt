@@ -18,3 +18,5 @@ tzdata
 urllib3
 whitenoise
 Pillow
+ruff
+djlint

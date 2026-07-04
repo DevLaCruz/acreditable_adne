@@ -1,60 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- ══════════════════════════════════════════════════
-     DASHBOARD (2026 AESTHETIC)
-══════════════════════════════════════════════════ -->
-<div class="min-h-screen bg-[#0B0F19] py-10 px-4 relative overflow-hidden font-sans">
-    
-    <div class="absolute top-[-20%] left-[-15%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[150px] pointer-events-none"></div>
-    <div class="absolute bottom-[-20%] right-[-15%] w-[40%] h-[40%] rounded-full bg-fuchsia-600/10 blur-[150px] pointer-events-none"></div>
-
-    <div class="container mx-auto relative z-10">
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 font-sans">
+    <div class="container mx-auto">
         <div class="mb-6">
             {% include 'includes/alerts.html' %}
         </div>
-
         <div class="flex flex-wrap">
             {% include 'includes/dashboard_sidebar.html' %}
 
             <main class="w-full md:w-3/4">
-                <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
-                    <header class="px-8 py-5 border-b border-white/10">
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden">
+                    <header class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-indigo-500/20 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-home text-indigo-400 text-sm"></i>
+                            <div class="w-8 h-8 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-home text-indigo-600 dark:text-indigo-400 text-sm"></i>
                             </div>
                             <div>
-                                <strong class="text-gray-200 font-semibold">Sesión iniciada de:</strong>
-                                <span class="text-indigo-300 ml-2">{{ user.full_name }}</span>
+                                <strong class="text-gray-900 dark:text-white font-semibold">Sesión iniciada de:</strong>
+                                <span class="text-indigo-600 dark:text-indigo-400 ml-2">{{ user.full_name }}</span>
                             </div>
                         </div>
                     </header>
-                    <div class="p-8">
+                    <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                            <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-8 text-center hover:border-indigo-500/30 transition-all duration-300">
-                                <div class="w-14 h-14 bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-                                    <i class="fas fa-shopping-bag text-2xl text-indigo-400"></i>
+                            <div class="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl p-6 text-center">
+                                <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-shopping-bag text-xl text-indigo-600 dark:text-indigo-400"></i>
                                 </div>
-                                <h5 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Total de Ordenes</h5>
-                                <h4 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-fuchsia-400">{{ orders_count }}</h4>
-                                <a href="{% url 'my_orders' %}" class="inline-block mt-4 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
+                                <h5 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Total de Ordenes</h5>
+                                <h4 class="text-3xl font-bold text-gray-900 dark:text-white">{{ orders_count }}</h4>
+                                <a href="{% url 'my_orders' %}" class="inline-block mt-3 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500">
                                     Ver Ordenes →
                                 </a>
                             </div>
 
-                            <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-8 text-center hover:border-fuchsia-500/30 transition-all duration-300">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl p-6 text-center">
                                 {% if userprofile.profile_picture %}
-                                <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-16 h-16 rounded-full mx-auto mb-4 ring-2 ring-fuchsia-500/50 object-cover">
+                                <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-14 h-14 rounded-full mx-auto mb-4 ring-2 ring-indigo-200 dark:ring-indigo-700 object-cover">
                                 {% else %}
-                                <div class="w-16 h-16 bg-fuchsia-500/20 rounded-full flex items-center justify-center mx-auto mb-4 ring-2 ring-fuchsia-500/50">
-                                    <i class="fas fa-user text-2xl text-fuchsia-400"></i>
+                                <div class="w-14 h-14 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-user text-xl text-indigo-600 dark:text-indigo-400"></i>
                                 </div>
                                 {% endif %}
-                                <p class="text-gray-300 font-medium">{{ user.email }}</p>
-                                <p class="text-gray-500 text-sm mt-1">{{ user.phone_number }}</p>
+                                <p class="text-gray-900 dark:text-white font-medium">{{ user.email }}</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">{{ user.phone_number }}</p>
                             </div>
-
                         </div>
                     </div>
                 </div>

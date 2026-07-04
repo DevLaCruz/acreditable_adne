@@ -1,97 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- ══════════════════════════════════════════════════
-     EDITAR PERFIL (2026 AESTHETIC)
-══════════════════════════════════════════════════ -->
-<div class="min-h-screen bg-[#0B0F19] py-10 px-4 relative overflow-hidden font-sans">
-    
-    <div class="absolute top-[-20%] right-[-15%] w-[40%] h-[40%] rounded-full bg-teal-600/10 blur-[150px] pointer-events-none"></div>
-    <div class="absolute bottom-[-20%] left-[-15%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none"></div>
-
-    <div class="container mx-auto relative z-10">
+<!-- ══════════════ EDITAR PERFIL ══════════════ -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 font-sans">
+    <div class="container mx-auto">
         <div class="mb-6">
             {% include 'includes/alerts.html' %}
         </div>
-
         <div class="flex flex-wrap">
             {% include 'includes/dashboard_sidebar.html' %}
 
             <main class="w-full md:w-3/4">
-                <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
-                    <header class="px-8 py-5 border-b border-white/10">
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden">
+                    <header class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-teal-500/20 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-user-edit text-teal-400 text-sm"></i>
+                            <div class="w-8 h-8 bg-teal-100 dark:bg-teal-900/50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user-edit text-teal-600 dark:text-teal-400 text-sm"></i>
                             </div>
-                            <strong class="text-gray-200 font-semibold">Editar Perfil de Usuario</strong>
+                            <strong class="text-gray-900 dark:text-white font-semibold">Editar Perfil de Usuario</strong>
                         </div>
                     </header>
-                    <div class="p-8">
+                    <div class="p-6">
                         <div class="flex justify-end mb-6">
                             {% if userprofile.profile_picture %}
-                            <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-24 h-24 rounded-full ring-2 ring-teal-500/50 object-cover">
+                            <img src="{{ userprofile.profile_picture.url }}" alt="Imagen de perfil" class="w-20 h-20 rounded-full ring-2 ring-teal-200 dark:ring-teal-700 object-cover">
                             {% else %}
-                            <div class="w-24 h-24 bg-teal-500/20 rounded-full flex items-center justify-center ring-2 ring-teal-500/50">
-                                <i class="fas fa-user text-3xl text-teal-400"></i>
+                            <div class="w-20 h-20 bg-teal-100 dark:bg-teal-900/50 rounded-full flex items-center justify-center ring-2 ring-teal-200 dark:ring-teal-700">
+                                <i class="fas fa-user text-2xl text-teal-600 dark:text-teal-400"></i>
                             </div>
                             {% endif %}
                         </div>
 
-                        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="space-y-6">
+                        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="space-y-5">
                             {% csrf_token %}
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Nombre</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Nombre</label>
                                     {{ user_form.first_name }}
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Apellidos</label>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Apellidos</label>
                                     {{ user_form.last_name }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Teléfono</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Teléfono</label>
                                     {{ user_form.phone_number }}
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Imagen Perfil</label>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Imagen Perfil</label>
                                     {{ profile_form.profile_picture }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Dirección</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Dirección</label>
                                     {{ profile_form.address_line_1 }}
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Detalles Dirección</label>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Detalles Dirección</label>
                                     {{ profile_form.address_line_2 }}
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Ciudad</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Ciudad</label>
                                     {{ profile_form.city }}
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">Departamento</label>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">Departamento</label>
                                     {{ profile_form.state }}
                                 </div>
-                                <div class="space-y-2">
-                                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-widest ml-1">País</label>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider ml-1">País</label>
                                     {{ profile_form.country }}
                                 </div>
                             </div>
 
-                            <div class="text-center pt-4">
-                                <button type="submit" class="w-full md:w-auto bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-400 hover:to-indigo-500 text-white font-bold py-4 px-12 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-3 mx-auto">
-                                    <span>GUARDAR CAMBIOS</span>
-                                    <i class="fas fa-save"></i>
+                            <div class="pt-4">
+                                <button type="submit" class="w-full md:w-auto bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-10 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 mx-auto">
+                                    GUARDAR CAMBIOS <i class="fas fa-save"></i>
                                 </button>
                             </div>
                         </form>

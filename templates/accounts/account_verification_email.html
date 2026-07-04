@@ -1,7 +1,7 @@
 {% autoescape off %}
 
 Hola {{user.first_name}}, 
-Gracias por registrarte en la plataforma web de Negocios Suárez. Para completar el proceso de creación de tu cuenta, necesitamos que verifiques tu dirección de correo electrónico.
+Gracias por registrarte en la plataforma web de NegSuArt. Para completar el proceso de creación de tu cuenta, necesitamos que verifiques tu dirección de correo electrónico.
 
 Por favor, haz clic en el siguiente enlace para verificar tu cuenta:
 
@@ -9,9 +9,9 @@ http://{{domain}}{% url 'activate' uidb64=uid token=token %}
 
 Si no solicitaste esta verificación, por favor ignora este correo.
 
-¡Gracias por ser parte de Negocios Suárez!
+¡Gracias por ser parte de NegSuArt!
 
 Saludos,
-El equipo de Negocios Suárez
+El equipo de NegSuArt
 
 {% endautoescape %}

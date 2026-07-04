@@ -1,59 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- ══════════════════════════════════════════════════
-     MIS ORDENES (2026 AESTHETIC)
-══════════════════════════════════════════════════ -->
-<div class="min-h-screen bg-[#0B0F19] py-10 px-4 relative overflow-hidden font-sans">
-    
-    <div class="absolute top-[-20%] left-[-15%] w-[40%] h-[40%] rounded-full bg-purple-600/10 blur-[150px] pointer-events-none"></div>
-    <div class="absolute bottom-[-20%] right-[-15%] w-[40%] h-[40%] rounded-full bg-indigo-600/10 blur-[150px] pointer-events-none"></div>
-
-    <div class="container mx-auto relative z-10">
+<!-- ══════════════ MIS ORDENES ══════════════ -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4 font-sans">
+    <div class="container mx-auto">
         <div class="mb-6">
             {% include 'includes/alerts.html' %}
         </div>
-
         <div class="flex flex-wrap">
             {% include 'includes/dashboard_sidebar.html' %}
 
             <main class="w-full md:w-3/4">
-                <div class="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden">
-                    <header class="px-8 py-5 border-b border-white/10">
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden">
+                    <header class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-box text-purple-400 text-sm"></i>
+                            <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-box text-purple-600 dark:text-purple-400 text-sm"></i>
                             </div>
-                            <strong class="text-gray-200 font-semibold">Ordenes de compra</strong>
+                            <strong class="text-gray-900 dark:text-white font-semibold">Ordenes de compra</strong>
                         </div>
                     </header>
                     <div class="p-6">
                         <div class="overflow-auto">
                             <table class="min-w-full">
                                 <thead>
-                                    <tr class="border-b border-white/10">
-                                        <th class="py-4 px-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-widest"># Orden</th>
-                                        <th class="py-4 px-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-widest">Nombre Facturación</th>
-                                        <th class="py-4 px-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-widest">Teléfono</th>
-                                        <th class="py-4 px-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-widest">Total Orden</th>
-                                        <th class="py-4 px-6 text-left text-xs font-semibold text-gray-400 uppercase tracking-widest">Fecha</th>
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="py-3 px-6 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"># Orden</th>
+                                        <th class="py-3 px-6 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nombre Facturación</th>
+                                        <th class="py-3 px-6 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Teléfono</th>
+                                        <th class="py-3 px-6 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Orden</th>
+                                        <th class="py-3 px-6 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Fecha</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for order in orders %}
-                                        <tr class="border-b border-white/5 hover:bg-white/[0.03] transition-colors">
-                                            <td class="py-4 px-6 text-gray-300 text-sm font-mono">{{ order.order_number }}</td>
-                                            <td class="py-4 px-6 text-gray-300 text-sm">{{ order.full_name }}</td>
-                                            <td class="py-4 px-6 text-gray-400 text-sm">{{ order.phone }}</td>
-                                            <td class="py-4 px-6 text-emerald-400 text-sm font-semibold">${{ order.order_total }}</td>
-                                            <td class="py-4 px-6 text-gray-500 text-sm">{{ order.created_at }}</td>
-                                        </tr>
+                                    <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                                        <td class="py-3 px-6 text-gray-900 dark:text-gray-200 text-sm font-mono">{{ order.order_number }}</td>
+                                        <td class="py-3 px-6 text-gray-900 dark:text-gray-200 text-sm">{{ order.full_name }}</td>
+                                        <td class="py-3 px-6 text-gray-500 dark:text-gray-400 text-sm">{{ order.phone }}</td>
+                                        <td class="py-3 px-6 text-emerald-600 dark:text-emerald-400 text-sm font-semibold">${{ order.order_total }}</td>
+                                        <td class="py-3 px-6 text-gray-500 dark:text-gray-400 text-sm">{{ order.created_at }}</td>
+                                    </tr>
                                     {% empty %}
-                                        <tr>
-                                            <td colspan="5" class="py-12 text-center text-gray-500">
-                                                <i class="fas fa-inbox text-3xl mb-3 block"></i>
-                                                No tienes ordenes aún.
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="5" class="py-12 text-center text-gray-400 dark:text-gray-500">
+                                            <i class="fas fa-inbox text-3xl mb-3 block"></i>
+                                            No tienes ordenes aún.
+                                        </td>
+                                    </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>

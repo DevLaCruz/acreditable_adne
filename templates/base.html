@@ -10,7 +10,7 @@
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
 
-        <title>Negocios Suárez</title>
+        <title>NegSuArt</title>
 
         <link
             href="{% static 'images/favicon.ico' %}"
@@ -43,10 +43,13 @@
             type="text/css"
         />
         {% endcomment %}
-        <link
-            href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css"
-            rel="stylesheet"
-        />
+        <!-- Tailwind CSS v3 (Play CDN - soporta dark mode y clases modernas) -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'media',
+            }
+        </script>
 
         <!-- Font awesome 5 -->
         <link

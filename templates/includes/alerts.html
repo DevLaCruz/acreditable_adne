@@ -1,25 +1,62 @@
 {% if messages %}
-    <div id="message" class="container mx-auto px-4">
+    <div id="messages-container" class="w-full mb-6 flex flex-col gap-3">
         {% for message in messages %}
-            <div class="flex items-center space-x-2 rounded-lg px-4 py-3 mb-4 shadow {% if message.tags == 'error' %}bg-red-50 text-red-700 border-l-4 border-red-500{% elif message.tags == 'success' %}bg-green-50 text-green-700 border-l-4 border-green-500{% elif message.tags == 'warning' %}bg-yellow-50 text-yellow-700 border-l-4 border-yellow-500{% elif message.tags == 'info' %}bg-blue-50 text-blue-700 border-l-4 border-blue-500{% endif %}" role="alert">
-                <!-- Icon -->
-                <div>
+            <div class="relative flex items-start gap-3 p-4 rounded-xl border shadow-sm transition-all duration-300
+                {% if message.tags == 'error' %}
+                    bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800/50
+                {% elif message.tags == 'success' %}
+                    bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800/50
+                {% elif message.tags == 'warning' %}
+                    bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800/50
+                {% elif message.tags == 'info' %}
+                    bg-indigo-50 border-indigo-200 dark:bg-indigo-900/20 dark:border-indigo-800/50
+                {% endif %}" 
+                role="alert">
+                
+                <!-- Icono -->
+                <div class="flex-shrink-0 mt-0.5">
                     {% if message.tags == 'error' %}
-                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 8A10 10 0 1 1 2 8a10 10 0 0 1 16 0zm-9 4a1 1 0 1 0 2 0V7a1 1 0 0 0-2 0v5zM9 16a1 1 0 1 0 2 0 1 1 0 0 0-2 0z" clip-rule="evenodd"/></svg>
+                        <i class="fas fa-exclamation-circle text-lg text-red-500 dark:text-red-400"></i>
                     {% elif message.tags == 'success' %}
-                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 1 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>
+                        <i class="fas fa-check-circle text-lg text-emerald-500 dark:text-emerald-400"></i>
                     {% elif message.tags == 'warning' %}
-                        <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.678-1.36 3.442 0l7.429 13.217c.75 1.333-.213 3-1.721 3H2.55c-1.508 0-2.471-1.667-1.721-3L8.257 3.1zM11 14a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm-1-4a1 1 0 0 0-1 1v2a1 1 0 0 0 2 0v-2a1 1 0 0 0-1-1z" clip-rule="evenodd"/></svg>
+                        <i class="fas fa-exclamation-triangle text-lg text-amber-500 dark:text-amber-400"></i>
                     {% elif message.tags == 'info' %}
-                        <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10A8 8 0 1 1 2 10a8 8 0 0 1 16 0zm-9-4a1 1 0 0 0-2 0v2a1 1 0 0 0 2 0V6zm-1 4a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1z" clip-rule="evenodd"/></svg>
+                        <i class="fas fa-info-circle text-lg text-indigo-500 dark:text-indigo-400"></i>
                     {% endif %}
                 </div>
-                <!-- Message Content -->
-                <div>
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} <strong>Importante:</strong> {% endif %}
+
+                <!-- Contenido del mensaje -->
+                <div class="flex-1 text-sm font-medium
+                    {% if message.tags == 'error' %} text-red-800 dark:text-red-300
+                    {% elif message.tags == 'success' %} text-emerald-800 dark:text-emerald-300
+                    {% elif message.tags == 'warning' %} text-amber-800 dark:text-amber-300
+                    {% elif message.tags == 'info' %} text-indigo-800 dark:text-indigo-300
+                    {% endif %}">
+                    
+                    {% if message.tags == 'error' %} 
+                        <strong class="block mb-0.5 text-red-900 dark:text-red-200 font-bold">Error de autenticación</strong> 
+                    {% endif %}
                     {{ message }}
                 </div>
+
+                <!-- Botón de cerrar -->
+                <button type="button" onclick="this.parentElement.style.display='none'" class="flex-shrink-0 ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         {% endfor %}
     </div>
+
+    <!-- Script opcional para desaparecer las alertas después de 5 segundos -->
+    <script>
+        setTimeout(function() {
+            const alerts = document.getElementById('messages-container');
+            if (alerts) {
+                alerts.style.opacity = '0';
+                alerts.style.transition = 'opacity 0.5s ease-out';
+                setTimeout(() => alerts.remove(), 500);
+            }
+        }, 5000);
+    </script>
 {% endif %}

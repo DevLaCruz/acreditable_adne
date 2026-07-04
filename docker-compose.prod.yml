@@ -47,11 +47,11 @@ services:
       DEBUG: False
       SECRET_KEY: ${SECRET_KEY}
       DB_ENGINE: django.db.backends.postgresql
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_PORT: 5432
+      RDS_DB_NAME: ${DB_NAME}
+      RDS_USERNAME: ${DB_USER}
+      RDS_PASSWORD: ${DB_PASSWORD}
+      RDS_HOSTNAME: db
+      RDS_PORT: 5432
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       EMAIL_BACKEND: ${EMAIL_BACKEND}
       EMAIL_HOST: ${EMAIL_HOST}
@@ -61,14 +61,16 @@ services:
       EMAIL_USE_TLS: ${EMAIL_USE_TLS}
       REDIS_URL: redis://redis:6379/0
     volumes:
-      - ./static:/app/static
-      - ./media:/app/media
+      - static_volume_prod:/app/static
+      - media_volume_prod:/app/media
       - /app/__pycache__
     ports:
       # Solo accesible desde localhost (Nginx del host proxea aquí)
       - "127.0.0.1:8000:8000"
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - suarez_network
