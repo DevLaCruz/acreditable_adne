@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 font-sans text-gray-900 dark:text-white">
+    <div class="container mx-auto max-w-2xl">
+        
+        <div class="mb-6">
+            <a href="{% url 'client_list' %}" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-2">
+                ← Volver a Clientes
+            </a>
+        </div>
+
+        {% include 'includes/alerts.html' %}
+
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-lg p-8">
+            <h1 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span>👤</span> Registrar Nuevo Cliente
+            </h1>
+
+            <form method="POST" action="{% url 'client_create' %}" class="space-y-5">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nombre Completo / Conocido (*)</label>
+                    <input type="text" name="know_name" placeholder="Ej: Betty Silva" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Teléfono / Celular / WhatsApp</label>
+                        <input type="text" name="phone_number" placeholder="Ej: 929082573" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                        <span class="text-[11px] text-gray-400 mt-1 block">Permite autovinculación si se registra en el ecommerce.</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Sector / Zona / P.J.</label>
+                        <input type="text" name="sector" placeholder="Ej: Brinos, Santos Chocano" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Dirección de Domicilio</label>
+                    <input type="text" name="address" placeholder="Ej: Elechos, Calle Jorge Chavez 810" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Latitud GPS</label>
+                        <input type="text" id="id_latitude" name="latitude" placeholder="-6.77..." class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Longitud GPS</label>
+                        <input type="text" id="id_longitude" name="longitude" placeholder="-79.84..." class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-mono">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex gap-4">
+                    <a href="{% url 'client_list' %}" class="w-1/2 text-center py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl text-sm">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all shadow">
+                        Guardar Cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'get_location.js' %}"></script>
+{% endblock %}

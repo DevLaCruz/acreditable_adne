@@ -1,206 +1,78 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<!-- ========================= SECTION PAGETOP ========================= -->
-<section class="bg-gray-100 py-4">
-  <div class="container mx-auto">
-    <h2 class="text-2xl font-semibold">Nuestra Tienda</h2>
+<!-- SECCIÓN TÍTULO -->
+<section class="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 py-5">
+  <div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Nuestra Tienda</h1>
   </div>
 </section>
-<!-- ========================= SECTION INTRO END// ========================= -->
 
-<!-- ========================= SECTION CONTENT ========================= -->
-<section class="py-8">
-  <div class="container mx-auto">
-    <div class="flex flex-wrap">
-      <aside class="w-full md:w-1/5 px-4">
-        <div class="bg-white shadow-md rounded-lg p-4">
-          <article class="mb-4">
-            <header class="border-b pb-2">
-              <a href="#" class="flex items-center justify-between" data-toggle="collapse" data-target="#collapse_1">
-                <h6 class="text-lg font-semibold">Categorias</h6>
-                <i class="fa fa-chevron-down"></i>
-              </a>
-            </header>
-            <div class="pt-4">
-              <ul>
-                    <li>
-                      <a href="{% url 'store' %}"
-                         class="text-gray-700 hover:underline"
-                         hx-get="{% url 'store' %}"
-                         hx-target="#product-list"
-                         hx-swap="innerHTML"
-                         hx-push-url="true">
-                        Todos
-                      </a>
-                    </li>
-                    {% for category in links %}
-                    <li>
-                      <a href="{{ category.get_url }}"
-                         class="text-gray-700 hover:underline"
-                         hx-get="{{ category.get_url }}"
-                         hx-target="#product-list"
-                         hx-swap="innerHTML"
-                         hx-push-url="true">
-                        {{ category.category_name }}
-                      </a>
-                    </li>
-                    {% endfor %}
-                  </ul>
-            </div>
-          </article>
+<!-- Spinner global: oculto por defecto, HTMX lo muestra sólo durante la petición -->
+<div id="product-spinner"
+     class="htmx-indicator"
+     style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:9998;">
+  <div style="width:2.5rem;height:2.5rem;border:4px solid #c7d2fe;border-top-color:#4f46e5;border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+</div>
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* HTMX muestra el indicador añadiendo la clase htmx-request al elemento padre */
+  .htmx-indicator { display: none !important; }
+  .htmx-request .htmx-indicator,
+  .htmx-request.htmx-indicator { display: block !important; }
+</style>
 
-          {% comment %} <article class="mb-4">
-            <header class="border-b pb-2">
-              <a href="#" class="flex items-center justify-between" data-toggle="collapse" data-target="#collapse_4">
-                <h6 class="text-lg font-semibold">Tamanos</h6>
-                <i class="fa fa-chevron-down"></i>
-              </a>
-            </header>
-            <div class="pt-4">
-              <div class="flex flex-wrap space-y-2">
-                <label class="flex items-center space-x-2">
-                  <input type="checkbox" class="form-checkbox">
-                  <span class="py-1 px-2 border rounded text-gray-700">XS</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                  <input type="checkbox" class="form-checkbox">
-                  <span class="py-1 px-2 border rounded text-gray-700">SM</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                  <input type="checkbox" class="form-checkbox">
-                  <span class="py-1 px-2 border rounded text-gray-700">LG</span>
-                </label>
-                <label class="flex items-center space-x-2">
-                  <input type="checkbox" class="form-checkbox">
-                  <span class="py-1 px-2 border rounded text-gray-700">XXL</span>
-                </label>
-              </div>
-            </div>
-          </article>
+<!-- CONTENIDO PRINCIPAL -->
+<section class="py-8 bg-slate-50 dark:bg-slate-900 min-h-screen">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row gap-6">
 
-          <article>
-            <header class="border-b pb-2">
-              <a href="#" class="flex items-center justify-between" data-toggle="collapse" data-target="#collapse_3">
-                <h6 class="text-lg font-semibold">Precios</h6>
-                <i class="fa fa-chevron-down"></i>
-              </a>
-            </header>
-            <div class="pt-4">
-              <div class="flex">
-                <div class="w-1/2 pr-2">
-                  <label class="text-sm text-gray-600">Min</label>
-                  <select class="w-full border border-gray-300 rounded px-2 py-1 mt-1">
-                    <option value="0">$0</option>
-                    <option value="50">$50</option>
-                    <option value="100">$100</option>
-                    <option value="150">$150</option>
-                    <option value="200">$200</option>
-                    <option value="500">$500</option>
-                    <option value="1000">$1000</option>
-                  </select>
-                </div>
-                <div class="w-1/2 pl-2">
-                  <label class="text-sm text-gray-600">Max</label>
-                  <select class="w-full border border-gray-300 rounded px-2 py-1 mt-1">
-                    <option value="50">$50</option>
-                    <option value="100">$100</option>
-                    <option value="150">$150</option>
-                    <option value="200">$200</option>
-                    <option value="500">$500</option>
-                    <option value="1000">$1000</option>
-                    <option value="2000">$2000+</option>
-                  </select>
-                </div>
-              </div>
-              <button class="w-full bg-blue-600 text-white py-2 mt-4 rounded">Buscar</button>
-            </div>
-          </article> {% endcomment %}
-        </div>
-      </aside>
-
-      <main class="w-full md:w-4/5 px-4">
-
-        <div id="product-list">
-          <header class="border-b pb-3 mb-4">
-            <span class="text-gray-700"><b>{{ product_count }}</b> Items Encontrados</span>
-          </header>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {% if products %}
-            {% for product in products %}
-            <div class="bg-white shadow-md rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
-              <a href="{{ product.get_url }}">
-                <img src="{{ product.images.url }}" alt="{{ product.product_name }}" class="w-full h-48 object-cover">
-              </a>
-              <figcaption class="p-4">
-                <h3 class="text-lg font-semibold">
-                  <a href="{{ product.get_url }}" class="hover:underline">{{ product.product_name }}</a>
-                </h3>
-                {% comment %} <div class="mt-2 text-green-600">${{ product.price }}</div> {% endcomment %}
-                <a href="{% url 'add_cart' product.id %}" class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded hover:bg-green-600 transition-colors">Agregar al Carrito</a>
-              </figcaption>
-            </div>
-            {% endfor %}
-          {% else %}
-          <div class="col-span-3 text-center py-12">
-            <i class="fa fa-search text-4xl text-gray-300 mb-3"></i>
-            <h2 class="text-gray-500">No se encontraron resultados</h2>
-          </div>
-          {% endif %}
-          </div>
-
-          <nav class="mt-8" aria-label="Page navigation sample">
-          {% if products.has_other_pages %}
-          <ul class="flex justify-center space-x-1">
-            {% if products.has_previous %}
+      <!-- ── Sidebar Categorías ── -->
+      <aside class="w-full md:w-52 flex-shrink-0">
+        <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm sticky top-4">
+          <h2 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">Categorías</h2>
+          <ul class="space-y-1">
             <li>
-              <a href="?page={{ products.previous_page_number }}"
-                 class="px-3 py-1 bg-blue-500 text-white rounded"
-                 hx-get="?page={{ products.previous_page_number }}"
+              <a href="{% url 'store' %}"
+                 hx-get="{% url 'store' %}"
                  hx-target="#product-list"
                  hx-swap="innerHTML"
                  hx-push-url="true"
-                 hx-indicator="#product-spinner">Anterior</a>
+                 hx-indicator="#product-spinner"
+                 class="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl transition-colors text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                <i class="fas fa-th text-xs"></i> Todos
+              </a>
             </li>
-            {% else %}
-            <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Anterior</span></li>
-            {% endif %}
-
-            {% for i in products.paginator.page_range %}
-              {% if products.number == i %}
-            <li><span class="px-3 py-1 bg-blue-600 text-white rounded">{{ i }}</span></li>
-              {% else %}
+            {% for category in links %}
             <li>
-              <a href="?page={{ i }}"
-                 class="px-3 py-1 bg-blue-500 text-white rounded"
-                 hx-get="?page={{ i }}"
+              <a href="{{ category.get_url }}"
+                 hx-get="{{ category.get_url }}"
                  hx-target="#product-list"
                  hx-swap="innerHTML"
-                 hx-push-url="true">{{ i }}</a>
+                 hx-push-url="true"
+                 hx-indicator="#product-spinner"
+                 class="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-xl transition-colors text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                <i class="fas fa-tag text-xs text-slate-400"></i>
+                {{ category.category_name }}
+              </a>
             </li>
-              {% endif %}
             {% endfor %}
-
-            {% if products.has_next %}
-            <li>
-              <a href="?page={{ products.next_page_number }}"
-                 class="px-3 py-1 bg-blue-500 text-white rounded"
-                 hx-get="?page={{ products.next_page_number }}"
-                 hx-target="#product-list"
-                 hx-swap="innerHTML"
-                 hx-push-url="true">Siguiente</a>
-            </li>
-            {% else %}
-            <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>
-            {% endif %}
           </ul>
-          {% endif %}
-          </nav>
+        </div>
+      </aside>
+
+      <!-- ── Lista de Productos ── -->
+      <main class="flex-1">
+        <!-- Contenedor que HTMX reemplaza al navegar -->
+        <div id="product-list">
+          {% include 'store/partials/product_list.html' %}
+        </div>
       </main>
+
     </div>
   </div>
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock %}
+

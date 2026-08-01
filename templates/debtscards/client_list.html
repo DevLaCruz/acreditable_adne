@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 font-sans text-gray-900 dark:text-white">
+    <div class="container mx-auto max-w-7xl">
+        
+        <!-- Encabezado & Título -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-extrabold flex items-center gap-3">
+                    <span class="p-3 bg-indigo-600 text-white rounded-2xl shadow-lg">📊</span>
+                    Administración de Clientes & Cobranzas
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                    Control de fichas de crédito, rutas de cobro y geolocalización de clientes.
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <a href="{% url 'client_create' %}" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2 text-sm">
+                    <i class="fas fa-user-plus"></i> Nuevo Cliente
+                </a>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Métricas -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                    👥
+                </div>
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Clientes</span>
+                    <h3 class="text-3xl font-black mt-1">{{ total_clients }}</h3>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                    💳
+                </div>
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Tarjetas Activas</span>
+                    <h3 class="text-3xl font-black mt-1 text-amber-600 dark:text-amber-400">{{ total_active_cards }}</h3>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 rounded-2xl flex items-center justify-center text-2xl font-bold">
+                    💰
+                </div>
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Por Cobrar Total</span>
+                    <h3 class="text-3xl font-black mt-1 text-emerald-600 dark:text-emerald-400">S/ {{ total_system_balance|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buscador y Filtros -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm mb-8">
+            <form method="GET" action="{% url 'client_list' %}" class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="md:col-span-6 relative">
+                    <input type="text" name="q" value="{{ query }}" placeholder="Buscar por Nombre, Teléfono o Dirección..." class="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <i class="fas fa-search absolute left-3.5 top-3.5 text-gray-400"></i>
+                </div>
+                
+                <div class="md:col-span-4">
+                    <select name="sector" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">-- Todos los Sectores / Zonas --</option>
+                        {% for sec in sectors %}
+                            <option value="{{ sec }}" {% if sector_filter == sec %}selected{% endif %}>{{ sec }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="md:col-span-2 flex gap-2">
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm transition-all">
+                        Filtrar
+                    </button>
+                    {% if query or sector_filter %}
+                    <a href="{% url 'client_list' %}" class="px-4 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-sm font-semibold hover:bg-gray-300">
+                        Limpiar
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+
+        <!-- Mapa de Ruta de Cobro -->
+        {% if map_clients_json %}
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm mb-8">
+            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span>📍</span> Ruta de Cobro Interactiva (Ubicaciones GPS)
+            </h2>
+            <div id="clients-map" style="height: 380px;" class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 z-0"></div>
+        </div>
+        {% endif %}
+
+        <!-- Tabla de Clientes -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 font-bold text-lg">
+                Lista de Clientes Registrados
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-left text-sm">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50 border-b border-gray-200 dark:border-gray-700 uppercase text-xs text-gray-400 font-semibold tracking-wider">
+                        <tr>
+                            <th class="py-4 px-6">Cliente</th>
+                            <th class="py-4 px-6">Teléfono</th>
+                            <th class="py-4 px-6">Sector / Dirección</th>
+                            <th class="py-4 px-6 text-center">Fichas Activas</th>
+                            <th class="py-4 px-6 text-right">Saldo Pendiente</th>
+                            <th class="py-4 px-6 text-center">Web Sync</th>
+                            <th class="py-4 px-6 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                        {% for client in clients %}
+                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                            <td class="py-4 px-6 font-semibold">
+                                <a href="{% url 'client_detail' client.id %}" class="text-indigo-600 dark:text-indigo-400 hover:underline">
+                                    {{ client.know_name }}
+                                </a>
+                            </td>
+                            <td class="py-4 px-6 text-gray-600 dark:text-gray-300">
+                                {{ client.phone_number|default:"-" }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="block text-gray-900 dark:text-white font-medium">{{ client.sector|default:"General" }}</span>
+                                <span class="block text-xs text-gray-400">{{ client.address|truncatechars:35 }}</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold {% if client.active_cards_count > 0 %}bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300{% else %}bg-gray-100 dark:bg-gray-700 text-gray-500{% endif %}">
+                                    {{ client.active_cards_count }} Tarjetas
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right font-mono font-bold text-base {% if client.total_balance > 0 %}text-emerald-600 dark:text-emerald-400{% else %}text-gray-400{% endif %}">
+                                S/ {{ client.total_balance|floatformat:2 }}
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                {% if client.user %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300" title="Vinculado a cuenta web: {{ client.user.email }}">
+                                        ⚡ Autovinculado
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+                                        Solo Campo
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-center space-x-2">
+                                <a href="{% url 'client_detail' client.id %}" class="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-300 rounded-lg font-semibold hover:bg-indigo-100 text-xs">
+                                    Ver Fichas
+                                </a>
+                                {% if client.map_url %}
+                                <a href="{{ client.map_url }}" target="_blank" class="px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 rounded-lg font-semibold hover:bg-blue-100 text-xs">
+                                    📍 GPS
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="py-12 text-center text-gray-400">
+                                No se encontraron clientes con los filtros seleccionados.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const mapClients = {{ map_clients_json|safe }};
+        if (mapClients.length > 0) {
+            const map = L.map('clients-map').setView([mapClients[0].lat, mapClients[0].lng], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
+
+            const bounds = [];
+            mapClients.forEach(c => {
+                const marker = L.marker([c.lat, c.lng]).addTo(map);
+                marker.bindPopup(`
+                    <div style="font-family: sans-serif; padding: 4px;">
+                        <strong style="font-size:14px; color:#1e293b;">${c.name}</strong><br/>
+                        <span style="color:#64748b; font-size:12px;">Sector: ${c.sector || 'General'}</span><br/>
+                        <span style="color:#059669; font-weight:bold; font-size:13px;">Saldo Resta: S/ ${c.balance.toFixed(2)}</span><br/>
+                        <a href="/debtscards/clients/${c.id}/" style="display:inline-block; margin-top:6px; color:#2563eb; font-weight:bold; font-size:12px;">Ver Ficha Completa →</a>
+                    </div>
+                `);
+                bounds.push([c.lat, c.lng]);
+            });
+
+            if (bounds.length > 1) {
+                map.fitBounds(bounds, { padding: [30, 30] });
+            }
+        }
+    });
+</script>
+{% endblock %}

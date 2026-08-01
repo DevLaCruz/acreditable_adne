@@ -5,6 +5,8 @@
         <meta charset="utf-8" />
         <meta http-equiv="pragma" content="no-cache" />
         <meta http-equiv="cache-control" content="max-age=604800" />
+        {# CSRF token para HTMX — se lee via JS en el bloque de configuración #}
+        <meta name="csrf-token" content="{{ csrf_token }}">
         <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -21,7 +23,7 @@
         <!-- HTMX: navegación SPA-like sin recargas completas -->
         <script
             src="https://unpkg.com/htmx.org@1.9.12"
-            integrity="sha384-SKcMNZ2xRK4FEtQH//HEq5VJo7liZK+AOOPMjMLxuWMHWVvbO0z5gNBxYhBY97B"
+            integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2"
             crossorigin="anonymous"
         ></script>
 
@@ -93,6 +95,15 @@
                 }, 4000);
             });
             // jquery end
+
+            // ── Configuración global de HTMX ──────────────────────────────
+            // Enviar CSRF token automáticamente en cada petición HTMX (POST/PUT/PATCH/DELETE)
+            document.addEventListener("DOMContentLoaded", function () {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                document.body.setAttribute('hx-headers', JSON.stringify({'X-CSRFToken': csrfToken}));
+                // Inicializar HTMX en el body para que los headers apliquen globalmente
+                if (window.htmx) htmx.process(document.body);
+            });
 
             // Barra de progreso global para peticiones HTMX
             document.addEventListener("htmx:beforeRequest", function () {
@@ -258,7 +269,7 @@
             });
         </script>
     </head>
-    <body hx-boost="true">
+    <body>
         <!-- Barra de progreso HTMX (top de pantalla) -->
         <div
             id="htmx-progress"
@@ -277,6 +288,11 @@
             "
         ></div>
 
-        {% include 'includes/navbar.html' %} {%block content%} {%endblock%} {% include 'includes/footer.html' %}
+        {% include 'includes/navbar.html' %}
+        {%block content%}{%endblock%}
+        {% include 'includes/footer.html' %}
+
+        <!-- Toast Zone Global (siempre disponible, incluso en product_detail) -->
+        <div id="toast-zone" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
     </body>
 </html>

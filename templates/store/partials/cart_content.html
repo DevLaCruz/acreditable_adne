@@ -1,0 +1,134 @@
+{% load static %}
+<div id="cart-content" class="w-full">
+    <!-- Header info -->
+    <div class="mb-8 flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-50">Tu Carrito de Compras</h1>
+            {% if cart_items %}
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">
+                {{ cart_items|length }} producto{{ cart_items|length|pluralize }} en tu carrito
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ESTADO VACÍO -->
+    {% if not cart_items %}
+    <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center shadow-sm flex flex-col items-center justify-center">
+        <div class="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mb-6 text-slate-400 text-4xl">
+            🛒
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Tu carrito está vacío</h2>
+        <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 max-w-sm">
+            Parece que aún no has agregado ningún producto. ¡Explora el catálogo y encuentra lo que necesitas!
+        </p>
+        <a href="{% url 'store' %}" class="inline-flex items-center gap-2 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl px-6 py-3 font-semibold text-sm hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow">
+            <i class="fas fa-arrow-left text-xs"></i>
+            Explorar Tienda
+        </a>
+    </div>
+
+    <!-- CARRITO CON PRODUCTOS -->
+    {% else %}
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+        
+        <!-- Lista de Productos (Shadcn Cards) -->
+        <div class="flex-1 space-y-4 w-full">
+            {% for cart_item in cart_items %}
+            <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-5 hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+                
+                <!-- Imagen -->
+                <a href="{{ cart_item.product.get_url }}" class="flex-shrink-0">
+                    <img src="{{ cart_item.product.images.url }}" alt="{{ cart_item.product.product_name }}" class="w-20 h-20 object-cover rounded-xl border border-slate-100 dark:border-slate-800" />
+                </a>
+
+                <!-- Nombre y Variaciones -->
+                <div class="flex-1 min-w-0">
+                    <a href="{{ cart_item.product.get_url }}" class="text-base font-bold text-slate-900 dark:text-slate-100 hover:text-indigo-600 transition-colors block truncate">
+                        {{ cart_item.product.product_name }}
+                    </a>
+
+                    {% if cart_item.variations.all %}
+                    <div class="flex flex-wrap gap-1.5 mt-2">
+                        {% for item in cart_item.variations.all %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                            {{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-xs text-slate-400 mt-1">Sin variaciones</p>
+                    {% endif %}
+                </div>
+
+                <!-- Controles HTMX de Cantidad -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <!-- Restar uno con HTMX -->
+                    <button hx-get="{% url 'remove_cart' cart_item.product.id cart_item.id %}"
+                            hx-target="#cart-content"
+                            hx-swap="outerHTML"
+                            type="button"
+                            class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors font-bold text-sm"
+                            title="Disminuir cantidad">
+                        -
+                    </button>
+
+                    <!-- Cantidad actual -->
+                    <span class="w-8 text-center text-sm font-bold text-slate-900 dark:text-slate-100">
+                        {{ cart_item.quantity }}
+                    </span>
+
+                    <!-- Sumar uno con HTMX -->
+                    <button hx-post="{% url 'add_cart_item' cart_item.product.id cart_item.id %}"
+                            hx-target="#cart-content"
+                            hx-swap="outerHTML"
+                            type="button"
+                            class="w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900 transition-colors font-bold text-sm"
+                            title="Aumentar cantidad">
+                        +
+                    </button>
+                </div>
+
+                <!-- Botón Eliminar con HTMX -->
+                <button hx-get="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"
+                        hx-target="#cart-content"
+                        hx-swap="outerHTML"
+                        type="button"
+                        class="flex-shrink-0 w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+                        title="Eliminar producto">
+                    <i class="fas fa-trash-alt text-sm"></i>
+                </button>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Panel Lateral Resumen (Shadcn Card) -->
+        <aside class="w-full lg:w-80 flex-shrink-0">
+            <div class="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm sticky top-6">
+                <h2 class="text-base font-bold text-slate-900 dark:text-slate-100 mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+                    Resumen del Pedido
+                </h2>
+
+                <div class="flex justify-between items-center py-2 text-sm">
+                    <span class="text-slate-500 dark:text-slate-400">Total ítems</span>
+                    <span class="font-semibold text-slate-900 dark:text-slate-100">{{ quantity }} unidad{{ quantity|pluralize:"es" }}</span>
+                </div>
+
+                <div class="pt-6 space-y-3">
+                    <a href="{% url 'checkout' %}" class="flex items-center justify-center gap-2 w-full bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl py-3 font-semibold text-sm hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow">
+                        <i class="fas fa-lock text-xs"></i>
+                        Procesar Pedido
+                    </a>
+
+                    <a href="{% url 'store' %}" class="flex items-center justify-center gap-2 w-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-xl py-3 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                        <i class="fas fa-arrow-left text-xs"></i>
+                        Seguir Comprando
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+    {% endif %}
+</div>

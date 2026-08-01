@@ -246,60 +246,8 @@
                     {% endif %}
                 </div>
 
-                <!-- Carrito Desplegable -->
-                <div
-                    x-data="{ open: false }"
-                    x-init="open = false"
-                    class="relative"
-                >
-                    <a href="#" @click="open = !open" class="flex items-center">
-                        <div
-                            class="icon w-8 h-8 flex items-center justify-center border rounded-full"
-                        >
-                            <i class="fa fa-shopping-cart"></i>
-                        </div>
-                        <span
-                            class="absolute top-0 right-0 bg-red-600 text-white rounded-full text-xs px-2"
-                            >{{ cart_count }}</span
-                        >
-                    </a>
-
-                    <!-- Carrito Desplegable -->
-                    <div
-                        x-show="open"
-                        x-transition
-                        @click.away="open = false"
-                        class="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg p-4"
-                    >
-                        <h3 class="font-semibold text-lg mb-2">
-                            Carrito de Compras
-                        </h3>
-                        {% for item in cart_items %}
-                        <div class="flex items-center justify-between mb-2">
-                            <div>
-                                <p class="text-sm font-medium">
-                                    {{ item.product.product_name }}
-                                </p>
-                                <p class="text-xs text-gray-500">
-                                    Cantidad: {{ item.quantity }}
-                                </p>
-                            </div>
-                            {% comment %}
-                            <span class="text-sm font-semibold"
-                                >$ {{ item.sub_total }}</span
-                            >
-                            {% endcomment %}
-                        </div>
-                        {% endfor %}
-                        <div class="border-t pt-2 mt-2 text-right">
-                            <a
-                                href="{% url 'cart' %}"
-                                class="text-blue-600 hover:underline"
-                                >Ver Carrito Completo</a
-                            >
-                        </div>
-                    </div>
-                </div>
+                <!-- Carrito Desplegable (HTMX + Shadcn Component) -->
+                {% include 'includes/navbar_cart.html' %}
             </div>
         </div>
     </section>

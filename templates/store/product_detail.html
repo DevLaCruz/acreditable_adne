@@ -48,7 +48,10 @@
 
         <!-- Detalles del producto -->
         <main class="w-full md:w-1/2 p-6 border-t md:border-t-0 md:border-l">
-          <form action="{% url 'add_cart' single_product.id %}" method="POST">
+          <form id="add-to-cart-form"
+                hx-post="{% url 'add_cart' single_product.id %}"
+                hx-target="#toast-zone"
+                hx-swap="beforeend">
             {% csrf_token %}
             <article class="space-y-4">
               <h2 class="text-2xl font-semibold">{{ single_product.product_name }}</h2>
@@ -92,7 +95,8 @@
               {% if single_product.stock <= 0 %}
               <span class="text-red-500 font-semibold">Producto fuera de stock</span>
               {% else %}
-              <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 flex items-center justify-center space-x-2">
+              <button type="submit"
+                      class="w-full bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 py-3 rounded-xl hover:bg-indigo-600 transition-all font-bold text-sm flex items-center justify-center space-x-2 shadow">
                 <span>Agregar al carrito</span>
                 <i class="fas fa-shopping-cart"></i>
               </button>

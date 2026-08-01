@@ -1,66 +1,80 @@
 {% load static %}
-{# Parcial devuelto por HTMX al paginar o filtrar por categoría.            #}
-{# Se inyecta dentro de <div id="product-list"> en store.html               #}
+{# Partial devuelto por HTMX al paginar o filtrar por categoría — se inyecta dentro de #product-list #}
+<p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-4">
+  <strong class="text-slate-900 dark:text-white text-sm">{{ product_count }}</strong> producto{{ product_count|pluralize }} encontrado{{ product_count|pluralize }}
+</p>
 
-<header class="border-b pb-3 mb-4">
-  <span class="text-gray-700"><b>{{ product_count }}</b> Items Encontrados</span>
-</header>
-
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
   {% if products %}
     {% for product in products %}
-    <div class="bg-white shadow-md rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
-      <a href="{{ product.get_url }}">
+    <!-- Product Card -->
+    <div class="group bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col">
+      <!-- Imagen -->
+      <a href="{{ product.get_url }}" class="block overflow-hidden flex-shrink-0">
         <img src="{{ product.images.url }}"
              alt="{{ product.product_name }}"
-             class="w-full h-48 object-cover">
+             class="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300">
       </a>
-      <figcaption class="p-4">
-        <h3 class="text-lg font-semibold">
-          <a href="{{ product.get_url }}" class="hover:underline">{{ product.product_name }}</a>
+
+      <!-- Info -->
+      <div class="p-4 flex flex-col flex-1 justify-between gap-3">
+        <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100 line-clamp-2 leading-snug">
+          <a href="{{ product.get_url }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            {{ product.product_name }}
+          </a>
         </h3>
-        <a href="{% url 'add_cart' product.id %}"
-           class="block w-full bg-green-500 text-white text-center py-2 mt-3 rounded hover:bg-green-600 transition-colors">
-          Agregar al Carrito
-        </a>
-      </figcaption>
+
+        <!-- Botón HTMX: agrega sin recargar, muestra toast -->
+        <button
+          hx-post="{% url 'add_cart' product.id %}"
+          hx-target="#toast-zone"
+          hx-swap="beforeend"
+          class="w-full bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl py-2.5 font-bold text-xs hover:bg-indigo-600 dark:hover:bg-indigo-400 dark:hover:text-white transition-colors shadow flex items-center justify-center gap-2 cursor-pointer">
+          <i class="fas fa-cart-plus text-xs"></i> Agregar al Carrito
+        </button>
+      </div>
     </div>
     {% endfor %}
   {% else %}
-  <div class="col-span-3 text-center py-12">
-    <i class="fa fa-search text-4xl text-gray-300 mb-3"></i>
-    <h2 class="text-gray-500">No se encontraron resultados</h2>
+  <div class="col-span-full text-center py-16 bg-white dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800">
+    <i class="fas fa-search text-4xl text-slate-300 dark:text-slate-700 mb-4 block"></i>
+    <h2 class="text-slate-500 dark:text-slate-400 font-medium">No se encontraron productos en esta categoría</h2>
   </div>
   {% endif %}
 </div>
 
-<nav class="mt-8" aria-label="Paginación">
-  {% if products.has_other_pages %}
-  <ul class="flex justify-center space-x-1">
+<!-- Paginación HTMX -->
+{% if products.has_other_pages %}
+<nav class="mt-8 flex justify-center" aria-label="Paginación">
+  <ul class="flex items-center gap-1.5">
     {% if products.has_previous %}
     <li>
       <a href="?page={{ products.previous_page_number }}"
-         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
          hx-get="?page={{ products.previous_page_number }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true">Anterior</a>
+         hx-push-url="true"
+         hx-indicator="#product-spinner"
+         class="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        ← Anterior
+      </a>
     </li>
-    {% else %}
-    <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Anterior</span></li>
     {% endif %}
 
     {% for i in products.paginator.page_range %}
       {% if products.number == i %}
-    <li><span class="px-3 py-1 bg-blue-600 text-white rounded">{{ i }}</span></li>
+    <li><span class="px-3.5 py-2 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 font-black rounded-xl text-xs shadow">{{ i }}</span></li>
       {% else %}
     <li>
       <a href="?page={{ i }}"
-         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
          hx-get="?page={{ i }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true">{{ i }}</a>
+         hx-push-url="true"
+         hx-indicator="#product-spinner"
+         class="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        {{ i }}
+      </a>
     </li>
       {% endif %}
     {% endfor %}
@@ -68,15 +82,16 @@
     {% if products.has_next %}
     <li>
       <a href="?page={{ products.next_page_number }}"
-         class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
          hx-get="?page={{ products.next_page_number }}"
          hx-target="#product-list"
          hx-swap="innerHTML"
-         hx-push-url="true">Siguiente</a>
+         hx-push-url="true"
+         hx-indicator="#product-spinner"
+         class="px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        Siguiente →
+      </a>
     </li>
-    {% else %}
-    <li><span class="px-3 py-1 bg-gray-300 text-gray-600 rounded">Siguiente</span></li>
     {% endif %}
   </ul>
-  {% endif %}
 </nav>
+{% endif %}

@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 font-sans text-gray-900 dark:text-white">
+    <div class="container mx-auto max-w-6xl">
+        
+        <div class="mb-6 flex items-center justify-between">
+            <a href="{% url 'client_list' %}" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-2">
+                ← Volver al Listado de Clientes
+            </a>
+            <a href="{% url 'card_create' client.id %}" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow transition-all text-sm flex items-center gap-2">
+                ➕ Crear Nueva Tarjeta de Crédito
+            </a>
+        </div>
+
+        {% include 'includes/alerts.html' %}
+
+        <!-- Información del Cliente -->
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl font-extrabold">{{ client.know_name }}</h1>
+                        {% if client.user %}
+                            <span class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-full text-xs font-bold">
+                                ⚡ Vinculado Web ({{ client.user.email }})
+                            </span>
+                        {% else %}
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-full text-xs font-semibold">
+                                Solo Cliente Campo
+                            </span>
+                        {% endif %}
+                    </div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                        📍 {{ client.address|default:"Sin dirección registrada" }} — <strong class="text-gray-700 dark:text-gray-300">Sector: {{ client.sector|default:"General" }}</strong>
+                    </p>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        📞 {{ client.phone_number|default:"Sin teléfono" }}
+                    </p>
+                </div>
+                <div>
+                    {% if client.map_url %}
+                    <a href="{{ client.map_url }}" target="_blank" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-sm transition-all inline-flex items-center gap-2">
+                        🗺️ Ver Dirección en Google Maps
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas Activas -->
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+            💳 Tarjetas / Fichas Activas en Cobro
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {% for card in active_cards %}
+            <div class="bg-white dark:bg-gray-800 border-2 border-indigo-500/30 rounded-2xl p-6 shadow-sm hover:border-indigo-500 transition-all relative">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-xl text-xs font-black">
+                        Ficha Nº {{ card.card_number }}
+                    </span>
+                    <span class="text-xs text-gray-400 font-semibold">
+                        Emisión: {{ card.start_date }}
+                    </span>
+                </div>
+                
+                <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">
+                    {{ card.article_description }}
+                </h3>
+
+                <div class="grid grid-cols-2 gap-4 my-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl text-sm">
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase block">Total Contratado</span>
+                        <strong class="text-base text-gray-700 dark:text-gray-200">S/ {{ card.total_amount|floatformat:2 }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-400 font-semibold uppercase block">Saldo Pendiente (RESTA)</span>
+                        <strong class="text-lg text-emerald-600 dark:text-emerald-400 font-black">S/ {{ card.balance|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mb-4">
+                    <span>Pacto: <strong>{{ card.get_payment_frequency_display }}</strong> (S/ {{ card.agreed_quota|floatformat:2 }})</span>
+                    <span>Cobrador: <strong>{{ card.collector|default:"Sin asignar" }}</strong></span>
+                </div>
+
+                <a href="{% url 'card_detail' card.id %}" class="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm transition-all shadow">
+                    📖 Abrir Tarjeta Digital (Cobrar / Ver Historial)
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-span-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-8 text-center text-gray-400">
+                Este cliente no tiene tarjetas de deuda activas actualmente.
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Tarjetas Cerradas / Canceladas -->
+        {% if closed_cards %}
+        <h2 class="text-xl font-bold mb-4 text-gray-500">
+            ✅ Historial de Tarjetas Canceladas / Cerradas
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-75">
+            {% for card in closed_cards %}
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 rounded-xl text-xs font-bold">
+                        Ficha Nº {{ card.card_number }} — {{ card.get_status_display }}
+                    </span>
+                </div>
+                <h3 class="font-bold text-base">{{ card.article_description }}</h3>
+                <p class="text-sm text-gray-500 mt-1">Total: S/ {{ card.total_amount|floatformat:2 }} | Pagado Completo</p>
+                <a href="{% url 'card_detail' card.id %}" class="inline-block mt-3 text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
+                    Ver Registro Histórico →
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

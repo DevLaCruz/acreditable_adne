@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 font-sans text-gray-900 dark:text-white">
+    <div class="container mx-auto max-w-2xl">
+        
+        <div class="mb-6">
+            <a href="{% url 'client_detail' client.id %}" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-2">
+                ← Volver a {{ client.know_name }}
+            </a>
+        </div>
+
+        {% include 'includes/alerts.html' %}
+
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-3xl shadow-lg p-8">
+            <h1 class="text-2xl font-bold mb-2 flex items-center gap-2">
+                <span>💳</span> Nueva Tarjeta de Crédito de Cobranza
+            </h1>
+            <p class="text-sm text-gray-500 mb-6">
+                Cliente: <strong class="text-indigo-600 dark:text-indigo-400">{{ client.know_name }}</strong> ({{ client.sector|default:"General" }})
+            </p>
+
+            <form method="POST" action="{% url 'card_create' client.id %}" class="space-y-5">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Nº de Tarjeta / Ficha (*)</label>
+                    <input type="text" name="card_number" placeholder="Ej: 46" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-lg font-black focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Descripción del Artículo(s) (*)</label>
+                    <input type="text" name="article_description" placeholder="Ej: 1 Multiuso Melamine x 160" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-indigo-500" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Monto Total a Cobrar (S/) (*)</label>
+                        <input type="number" step="1.00" min="1" name="total_amount" placeholder="Ej: 160.00" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-lg font-bold text-emerald-600 dark:text-emerald-400 focus:ring-2 focus:ring-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Fecha Emisión / Venta</label>
+                        <input type="date" name="start_date" value="{{ today|date:'Y-m-d' }}" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <!-- Acuerdo de Pago -->
+                <div class="p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl space-y-4">
+                    <span class="block text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Pacto de Pago (Pie de Tarjeta S/Q/M)</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Frecuencia</label>
+                            <select name="payment_frequency" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-semibold">
+                                <option value="S">Semanal (S)</option>
+                                <option value="Q">Quincenal (Q)</option>
+                                <option value="M" selected>Mensual (M)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Cuota Pactada (S/)</label>
+                            <input type="number" step="1.00" name="agreed_quota" placeholder="Ej: 40.00 o 10.00" class="w-full px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-semibold">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Cobrador Asignado</label>
+                    <select name="collector_id" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-sm">
+                        {% for c in collectors %}
+                            <option value="{{ c.id }}" {% if c == user %}selected{% endif %}>{{ c.full_name }} ({{ c.email }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="pt-4 flex gap-4">
+                    <a href="{% url 'client_detail' client.id %}" class="w-1/2 text-center py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl text-sm">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition-all shadow">
+                        Crear Tarjeta #
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

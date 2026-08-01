@@ -1,0 +1,68 @@
+<div id="navbar-cart-container"
+     hx-get="{% url 'cart_badge' %}"
+     hx-trigger="updateCartBadge from:body"
+     hx-swap="outerHTML"
+     x-data="{ open: false }"
+     x-init="open = false"
+     class="relative">
+    
+    <!-- Cart Icon Button (Shadcn Style) -->
+    <button @click="open = !open" 
+            type="button"
+            class="relative inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-950">
+        <i class="fas fa-shopping-cart text-sm"></i>
+        {% if cart_count > 0 %}
+        <span class="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center min-w-[20px] h-[20px] px-1 bg-indigo-600 text-white rounded-full text-[11px] font-bold shadow">
+            {{ cart_count }}
+        </span>
+        {% endif %}
+    </button>
+
+    <!-- Dropdown Menu (Shadcn Popover / Card Style) -->
+    <div x-show="open"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 scale-100"
+         x-transition:leave-end="opacity-0 scale-95"
+         @click.away="open = false"
+         style="display: none;"
+         class="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 p-4">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="font-bold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <span>🛒</span> Carrito de Compras
+            </h3>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                {{ cart_count }} item{{ cart_count|pluralize }}
+            </span>
+        </div>
+
+        <div class="max-h-60 overflow-y-auto py-2 divide-y divide-slate-100 dark:divide-slate-800">
+            {% for item in cart_items %}
+            <div class="py-2.5 flex items-center gap-3">
+                <img src="{{ item.product.images.url }}" alt="{{ item.product.product_name }}" class="w-10 h-10 object-cover rounded-lg border border-slate-100 dark:border-slate-800" />
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+                        {{ item.product.product_name }}
+                    </p>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                        Cant: <strong>{{ item.quantity }}</strong>
+                    </p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="py-6 text-center text-xs text-slate-400">
+                Tu carrito está vacío.
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-center">
+            <a href="{% url 'cart' %}" class="block w-full py-2.5 bg-slate-900 dark:bg-slate-50 text-white dark:text-slate-900 rounded-xl font-bold text-xs hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors shadow">
+                Ver Carrito Completo
+            </a>
+        </div>
+    </div>
+</div>
