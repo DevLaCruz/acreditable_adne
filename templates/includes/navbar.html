@@ -29,16 +29,16 @@
       </div>
       
       <!-- Menú de Navegación para Pantallas Grandes -->
-      <div class="hidden md:flex w-full items-center justify-between">
+      {% comment %} <div class="hidden md:flex w-full items-center justify-between">
         <ul class="flex space-x-4">
-          <li><a href="#" class="text-gray-600 hover:text-gray-800">Espanol</a></li>
-          <li><a href="#" class="text-gray-600 hover:text-gray-800">USD</a></li>
+          <li><a href="#" class="text-gray-600 hover:text-gray-800">Español</a></li>
+          <li><a href="#" class="text-gray-600 hover:text-gray-800">PEN</a></li>
         </ul>
         <ul class="flex space-x-4">
           <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-envelope"></i> Email</a></li>
           <li><a href="#" class="text-gray-600 hover:text-gray-800"><i class="fa fa-phone"></i> Llamanos</a></li>
         </ul>
-      </div>
+      </div> {% endcomment %}
     </div>
   </nav>
 
@@ -47,7 +47,7 @@
       <div class="flex items-center justify-between">
         <!-- Logo -->
         <div class="w-1/4 lg:w-1/6">
-          <a href="./" class="block">
+          <a href="{% url 'home' %}" class="block">
             <img class="h-12 w-auto" src="{% static 'images/logoTienda.png' %}" alt="Logo"/>
           </a>
         </div>
@@ -91,6 +91,28 @@
           </form>
         </div>
 
+        <div class="hidden md:block">
+          {% if user.id is None %}
+            <div class="text-sm">
+              <p class="text-gray-500">¡Bienvenido visitante!</p>
+              <div class="space-x-2">
+                <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800">Login</a>
+                <span class="text-gray-400">|</span>
+                <a href="{% url 'register' %}" class="text-blue-600 hover:text-blue-800">Registrar</a>
+              </div>
+            </div>
+          {% else %}
+            <div class="text-sm">
+              <p class="text-gray-500">¡Bienvenido {{ user.first_name }}!</p>
+              <div class="space-x-2">
+                <a href="{% url 'dashboard' %}" class="text-blue-600 hover:text-blue-800">Dashboard</a>
+                <span class="text-gray-400">|</span>
+                <a href="{% url 'logout' %}" class="text-blue-600 hover:text-blue-800">Cerrar Sesión</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        
         <!-- Carrito Desplegable -->
         <div x-data="{ open: false }" x-init="open = false" class="relative">
           <a href="#" @click="open = !open" class="flex items-center">
@@ -114,7 +136,7 @@
                 <p class="text-sm font-medium">{{ item.product.product_name }}</p>
                 <p class="text-xs text-gray-500">Cantidad: {{ item.quantity }}</p>
               </div>
-              <span class="text-sm font-semibold">$ {{ item.sub_total }}</span>
+              {% comment %} <span class="text-sm font-semibold">$ {{ item.sub_total }}</span> {% endcomment %}
             </div>
             {% endfor %}
             <div class="border-t pt-2 mt-2 text-right">

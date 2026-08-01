@@ -5,21 +5,54 @@
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="py-4">
   <div class="container mx-auto">
+    <div class="relative overflow-hidden">
+      <div class="slider-container flex transition-transform ease-in-out duration-500">
+        {% for category in categories %}
+          {% if category.cat_image %}
+          <div class="slide flex-shrink-0 w-full flex justify-center items-center">
+            <a href="{% url 'products_by_category' category.slug %}" class="block relative h-[250px] md:h-[300px] lg:h-[350px] w-full">
+              <img src="{{ category.cat_image.url }}" 
+                   alt="{{ category.category_name }}" 
+                   class="w-full h-full object-cover object-center rounded">
+              <div class="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/60 to-transparent">
+                <h2 class="text-white text-sm md:text-base lg:text-lg font-medium pb-4">{{ category.category_name }}</h2>
+              </div>
+            </a>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
 
-    <div class="rounded overflow-hidden">
-      <img src="{% static 'images/banners/banner01.jpg' %}" class="w-full rounded">
+      <!-- Navigation arrows -->
+      <button class="prev slider-btn absolute left-2 top-1/2 transform -translate-y-1/2">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="next slider-btn absolute right-2 top-1/2 transform -translate-y-1/2">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+
+      <!-- Dots -->
+      <div class="absolute bottom-2 left-0 right-0 flex justify-center space-x-2 z-10">
+        {% for category in categories %}
+          {% if category.cat_image %}
+          <button class="slider-dot w-2 h-2 rounded-full bg-white/70 opacity-50 hover:opacity-100"
+                  data-index="{{ forloop.counter0 }}"></button>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
-
-  </div> <!-- container //  -->
+  </div>
 </section>
 <!-- ========================= SECTION MAIN END// ========================= -->
 
 <!-- ========================= SECTION  ========================= -->
 <section class="py-4">
   <div class="container mx-auto">
-
     <header class="flex justify-between items-center mb-4">
-      <a href="./store.html" class="btn border border-primary text-primary hover:bg-primary hover:text-white transition-colors">Ver Todo</a>
+      <a href="{% url 'store' %}" 
+         class="px-4 py-2 border border-primary text-primary hover:bg-blue-600 transition-colors duration-300 rounded-md font-medium hover:border-blue-600 hover:text-white">
+        Ver Todo
+      </a>
       <h3 class="text-xl font-semibold">Productos populares</h3>
     </header>
 
@@ -53,5 +86,117 @@
   </div><!-- container // -->
 </section>
 <!-- ========================= SECTION  END// ========================= -->
-
+<style>
+  .slider-container {
+    display: flex;
+    width: 100%;
+    height: 250px;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .slide {
+    flex: 0 0 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @media (min-width: 768px) {
+    .slider-container {
+      height: 300px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .slider-container {
+      height: 350px;
+    }
+  }
+  
+  .slider-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+  }
+  
+  .slider-dot.active {
+    background-color: white;
+  }
+  </style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const sliderContainer = document.querySelector('.slider-container');
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.slider-dot');
+      const prevBtn = document.querySelector('.prev');
+      const nextBtn = document.querySelector('.next');
+      let currentSlide = 0;
+      const slideCount = slides.length;
+  
+      function updateSlider() {
+          sliderContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+          dots.forEach((dot, index) => {
+              dot.classList.toggle('active', index === currentSlide);
+          });
+      }
+  
+      function nextSlide() {
+          currentSlide = (currentSlide + 1) % slideCount;
+          updateSlider();
+      }
+  
+      function prevSlide() {
+          currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+          updateSlider();
+      }
+  
+      let autoplayInterval = setInterval(nextSlide, 5000);
+  
+      function stopAutoplay() {
+          clearInterval(autoplayInterval);
+      }
+  
+      function startAutoplay() {
+          autoplayInterval = setInterval(nextSlide, 5000);
+      }
+  
+      if (prevBtn && nextBtn) {
+          prevBtn.addEventListener('click', () => {
+              prevSlide();
+              stopAutoplay();
+              startAutoplay();
+          });
+  
+          nextBtn.addEventListener('click', () => {
+              nextSlide();
+              stopAutoplay();
+              startAutoplay();
+          });
+      }
+  
+      dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+              currentSlide = index;
+              updateSlider();
+              stopAutoplay();
+              startAutoplay();
+          });
+      });
+  
+      sliderContainer.addEventListener('mouseenter', stopAutoplay);
+      sliderContainer.addEventListener('mouseleave', startAutoplay);
+  
+      updateSlider();
+      startAutoplay();
+  });
+  </script>
 {% endblock %}

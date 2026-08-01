@@ -11,11 +11,15 @@ class ProductGalleryInline(admin.TabularInline):
 
 # Configuración de ProductAdmin para incluir galería y selección de variaciones
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('product_name', 'price', 'stock', 'category', 'modified_date', 'is_available')
+    #list_display = ('product_name', 'price', 'stock', 'category', 'modified_date', 'is_available')
+    list_display = ('product_name', 'stock', 'category', 'modified_date', 'is_available')
+
     prepopulated_fields = {'slug': ('product_name',)}
     list_filter = ('category', 'is_available')
     search_fields = ('product_name', 'description')
-    list_editable = ('is_available', 'stock', 'price')
+    #list_editable = ('is_available', 'stock', 'price')
+    list_editable = ('is_available', 'stock')
+
     inlines = [ProductGalleryInline]
 
     # Mostrar variaciones asociadas en la vista de detalle del producto

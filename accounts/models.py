@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from core.models import CoreModel
 
 # Create your models here.
 class MyAccountManager(BaseUserManager):
@@ -74,7 +75,7 @@ class Account(AbstractBaseUser):
         return True
 
 
-class UserProfile(models.Model):
+class UserProfile(CoreModel):
     user = models.OneToOneField(Account, on_delete=models.CASCADE)
     address_line_1 =  models.CharField(blank=True, max_length=100)
     address_line_2 =  models.CharField(blank=True, max_length=100)
