@@ -9,7 +9,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ('latitude',)
 
     class Media:
-        js = ('get_location.js',)  # <- Nombre del archivo que vamos a inyectar
+        js = ('static/get_location.js',)  # <- Nombre del archivo que vamos a inyectar
 
 admin.site.register(Client, ClientAdmin)
 

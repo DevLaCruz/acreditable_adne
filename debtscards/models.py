@@ -4,7 +4,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.html import mark_safe
 from accounts.models import Account
-from myhashlib import hash_id
+import hashlib
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from accounts.models import Account
@@ -62,17 +62,22 @@ class DebtAccount(models.Model):
         return f"{self.debtor_name} - {self.account_number}"
 
     
+def generate_hash_id(instance_id):
+    """Genera un hash SHA-256 basado en el ID de la instancia."""
+    hash_input = f"{instance_id}".encode('utf-8')
+    return hashlib.sha256(hash_input).hexdigest()
 
-
-# signals.py (o al final de tu models.py si prefieres)
 @receiver(post_save, sender=Client)
 def set_client_hash_id(sender, instance, created, **kwargs):
+    # Solo asignar hash_id si no existe y solo en creación
     if created and not instance.hash_id:
-        instance.hash_id = hash_id(instance.id)
+        instance.hash_id = generate_hash_id(instance.id)
+        # Usar update_fields para evitar triggers adicionales
         instance.save(update_fields=['hash_id'])
+    # Si no es creación, nunca modificar hash_id
 
 @receiver(post_save, sender=DebtAccount)
 def set_debtaccount_hash_id(sender, instance, created, **kwargs):
     if created and not instance.hash_id:
-        instance.hash_id = hash_id(instance.id)
+        instance.hash_id = generate_hash_id(instance.id)
         instance.save(update_fields=['hash_id'])
