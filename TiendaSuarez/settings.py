@@ -63,9 +63,14 @@ MIDDLEWARE = [
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://suarez.axtosys.com'
-]
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://neosuar.axtorch.com,https://suarez.axtosys.com',
+    cast=lambda v: [s.strip() for s in v.split(',') if s.strip()]
+)
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 SESSION_EXPIRE_SECONDS = 3600
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True

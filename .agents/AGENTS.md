@@ -1,6 +1,6 @@
 # AGENTS.md - Reglas y Resumen del Proyecto
 
-Este documento registra la arquitectura, decisiones de diseño, convenciones de código y el historial de cambios realizados en la aplicación **NegSuArt / Tienda Suárez** (`acreditable_adne`).
+Este documento registra la arquitectura, decisiones de diseño, convenciones de código y el historial de cambios realizados en la aplicación **Neosuar / Tienda Suárez** (`acreditable_adne`).
 
 ---
 
