@@ -2,6 +2,7 @@ import hashlib
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from accounts.models import Account
 
@@ -24,7 +25,7 @@ class Client(models.Model):
     sector = models.CharField(max_length=100, blank=True, help_text="Ej: Sector Brinos, P.J. Santos Chocano, J.L. Ortiz", verbose_name="Sector / Zona")
     latitude = models.FloatField(blank=True, null=True, verbose_name="Latitud GPS")
     longitude = models.FloatField(blank=True, null=True, verbose_name="Longitud GPS")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Fecha Registro")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Fecha Registro")
     hash_id = models.CharField(max_length=255, unique=True, blank=True, editable=False)
 
     class Meta:
