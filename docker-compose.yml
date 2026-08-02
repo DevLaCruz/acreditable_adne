@@ -41,6 +41,7 @@ services:
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
       EMAIL_USE_TLS: ${EMAIL_USE_TLS}
       TIME_ZONE: ${TIME_ZONE}
+      BASE_URL: ${BASE_URL}
     volumes:
       - .:/app
       - static_volume:/app/static

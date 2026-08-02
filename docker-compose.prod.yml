@@ -63,6 +63,7 @@ services:
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
       EMAIL_USE_TLS: ${EMAIL_USE_TLS}
       REDIS_URL: redis://redis:6379/0
+      BASE_URL: ${BASE_URL}
     volumes:
       - static_volume_prod:/app/static
       - media_volume_prod:/app/media
